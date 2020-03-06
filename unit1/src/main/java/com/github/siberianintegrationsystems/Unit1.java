@@ -1,4 +1,4 @@
-package com.github.siberianintegrationsystems;
+package main.java.com.github.siberianintegrationsystems;
 
 public class Unit1 {
 
@@ -15,7 +15,12 @@ public class Unit1 {
      * При реализации метода нельзя использовать метод reverse() из класса StringBuilder
      */
     private static String revertString() {
-        return "";
+        char [] inputArray = INPUT_STRING.toCharArray();
+        char [] resultArray = new char[INPUT_STRING.length()];
+        for(int i = 0; i < inputArray.length; i++) {
+            resultArray[inputArray.length - 1 - i] = inputArray[i];
+        }
+        return new String(resultArray);
     }
 
     private static void checkResult(String result) {
