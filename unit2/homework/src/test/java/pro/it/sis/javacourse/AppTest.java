@@ -11,4 +11,49 @@ public class AppTest {
 //        App classUnderTest = new App();
 //        assertNotNull("app should have a greeting", classUnderTest.getGreeting());
     }
+
+
+    @Test public void testApp() {
+        Resistance noResistance = new Resistance(0,0,0);
+        Resistance iceResistance = new Resistance(0, 0, 50);
+        Resistance fireResistance = new Resistance(0, 50, 0);
+
+        Target targetWithoutResistance = new Target("Копейщик первого уровня", noResistance,false,1);
+        Target targetWithIceResistance = new Target("ледяной великан", iceResistance, false, 40);
+        Target targetWithFireResistance = new Target("ифрит", fireResistance, false, 35);
+
+        Damage justPhysicalDamage = new Damage(40, 0,0);
+        Damage withFireDamage = new Damage(22, 40, 0);
+        Damage withIceDamage = new Damage(10, 0, 30);
+
+        Weapon justWeapon = new Weapon("Скалка кухонная", justPhysicalDamage);
+        Weapon weaponWithIceDamage = new Weapon("меч ночи в якутске", withIceDamage);
+        Weapon weaponWithFireDamage = new Weapon("пылающий асфальт", withFireDamage);
+
+        //про без сопротивления
+        assertTrue(targetWithoutResistance.hit(weaponWithFireDamage));
+        assertTrue(targetWithoutResistance.isDead());
+        assertEquals(0, targetWithoutResistance.getPoints());
+        //про не бей мертвых
+        assertFalse(targetWithoutResistance.hit(weaponWithFireDamage));
+        //про огонь
+        //сопротивление тому чем бьют
+        assertTrue(targetWithFireResistance.hit(weaponWithFireDamage));
+        assertEquals(13, targetWithFireResistance.getPoints());
+        assertFalse(targetWithFireResistance.isDead());
+        //сопротивление не тому
+        assertTrue(targetWithFireResistance.hit(weaponWithIceDamage));
+        assertEquals(0, targetWithFireResistance.getPoints());
+        assertTrue(targetWithFireResistance.isDead());
+        //про лед
+        //сопротивление тому чем бьют
+        assertTrue(targetWithIceResistance.hit(weaponWithIceDamage));
+        assertEquals(30, targetWithIceResistance.getPoints());
+        assertFalse(targetWithIceResistance.isDead());
+        //сопротивление не тому
+        assertTrue(targetWithIceResistance.hit(weaponWithFireDamage));
+        assertEquals(0, targetWithFireResistance.getPoints());
+        assertTrue(targetWithFireResistance.isDead());
+
+    }
 }
