@@ -1,18 +1,18 @@
 package pro.it.sis.javacourse;
 
-//Класс оружия, содержит информацию об уроне и название
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 
 @AllArgsConstructor
-public class Weapon {
+public class Damage {
     @Getter
     @NonNull
-    private String name;
+    private int physicalDamage;
     @Getter
     @NonNull
-    private Damage damage;
-
+    private int fireDamage;
+    @Getter
+    @NonNull
+    private int iceDamage;
 }
