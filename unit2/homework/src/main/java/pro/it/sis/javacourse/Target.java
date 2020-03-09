@@ -10,9 +10,11 @@ import lombok.NonNull;
 public class Target {
    @Getter
    @NonNull
-   private Resistance resistance;
+   private String name;
    @Getter
    @NonNull
+   private Resistance resistance;
+   @Getter
    private boolean isDead;
    @Getter
    @NonNull
