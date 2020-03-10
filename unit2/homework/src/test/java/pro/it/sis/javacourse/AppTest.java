@@ -18,9 +18,9 @@ public class AppTest {
         Resistance iceResistance = new Resistance(0, 0, 50);
         Resistance fireResistance = new Resistance(0, 50, 0);
 
-        Target targetWithoutResistance = new Target("Копейщик первого уровня", noResistance,false,1);
-        Target targetWithIceResistance = new Target("ледяной великан", iceResistance, false, 40);
-        Target targetWithFireResistance = new Target("ифрит", fireResistance, false, 35);
+        Target targetWithoutResistance = new Target("Копейщик первого уровня", noResistance,1);
+        Target targetWithIceResistance = new Target("ледяной великан", iceResistance, 40);
+        Target targetWithFireResistance = new Target("ифрит", fireResistance, 35);
 
         Damage justPhysicalDamage = new Damage(40, 0,0);
         Damage withFireDamage = new Damage(22, 40, 0);

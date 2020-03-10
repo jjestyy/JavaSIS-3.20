@@ -15,7 +15,6 @@ public class Target {
    @NonNull
    private Resistance resistance;
    @Getter
-   @NonNull
    private int points;
 
    public boolean isDead () {

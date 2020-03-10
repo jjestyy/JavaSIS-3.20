@@ -7,12 +7,9 @@ import lombok.NonNull;
 @AllArgsConstructor
 public class Damage {
     @Getter
-    @NonNull
     private int physicalDamage;
     @Getter
-    @NonNull
     private int fireDamage;
     @Getter
-    @NonNull
     private int iceDamage;
 }
