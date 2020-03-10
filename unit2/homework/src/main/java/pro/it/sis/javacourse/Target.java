@@ -15,20 +15,23 @@ public class Target {
    @NonNull
    private Resistance resistance;
    @Getter
-   private boolean isDead;
-   @Getter
    @NonNull
    private int points;
 
+   public boolean isDead () {
+      return points <= 0;
+   }
+
    public boolean hit(Weapon weapon) {
-      if(!isDead) {
+      if(!isDead()) {
          points = points - calculateHit(weapon.getDamage(), resistance);
          if (points <= 0 ) {
             points = 0;
-            isDead = true;
          }
          return true;
-      } else return false; // не бей лежачего
+      } else  {
+         return false; // не бей лежачего
+      }
    }
 
    private int calculateHit(Damage damage, Resistance resistance)
