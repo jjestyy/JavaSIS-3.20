@@ -24,10 +24,7 @@ public class Target {
 
    public boolean hit(Weapon weapon) {
       if(!isDead()) {
-         points = points - calculateHit(weapon.getDamage(), resistance);
-         if (points <= 0 ) {
-            points = 0;
-         }
+         points = Math.max(points - calculateHit(weapon.getDamage(), resistance),0);
          return true;
       } else  {
          return false; // не бей лежачего
