@@ -14,21 +14,17 @@ public class AppTest {
 
 
     @Test public void testApp() {
+
+        TargetWithFireResistance targetWithFireResistance = new TargetWithFireResistance();
+        TargetWithIceResistance targetWithIceResistance = new TargetWithIceResistance();
+        WeaponWithFireDamage weaponWithFireDamage = new WeaponWithFireDamage();
+        WeaponWithIceDamage weaponWithIceDamage = new WeaponWithIceDamage();
+
+        //все же нельзя исключать ситуацию когда нужна возможность задать параметры вручную
         Resistance noResistance = new Resistance(0,0,0);
-        Resistance iceResistance = new Resistance(0, 0, 50);
-        Resistance fireResistance = new Resistance(0, 50, 0);
-
         Target targetWithoutResistance = new Target("Копейщик первого уровня", noResistance,1);
-        Target targetWithIceResistance = new Target("ледяной великан", iceResistance, 40);
-        Target targetWithFireResistance = new Target("ифрит", fireResistance, 35);
-
         Damage justPhysicalDamage = new Damage(40, 0,0);
-        Damage withFireDamage = new Damage(22, 40, 0);
-        Damage withIceDamage = new Damage(10, 0, 30);
-
         Weapon justWeapon = new Weapon("Скалка кухонная", justPhysicalDamage);
-        Weapon weaponWithIceDamage = new Weapon("меч ночи в якутске", withIceDamage);
-        Weapon weaponWithFireDamage = new Weapon("пылающий асфальт", withFireDamage);
 
         //про без сопротивления
         assertTrue(targetWithoutResistance.hit(weaponWithFireDamage));
