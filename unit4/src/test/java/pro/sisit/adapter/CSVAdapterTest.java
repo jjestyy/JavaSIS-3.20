@@ -20,31 +20,44 @@ import pro.sisit.model.Book;
 public class CSVAdapterTest {
 
     @Before
-    public void createFile() {
+    public void createFile() throws IOException {
         // TODO: создать и заполнить csv-файл для сущности Author
         // TODO: создать и заполнить csv-файл для сущности Book
+
+        getBookPath().toFile().createNewFile();
+        CSVAdapter<Book> bookCsvAdapter = getBookCSVAdapter();
+
+        Book book0 = new Book(
+                "Убик",
+                "Филип Дик",
+                "Научная фантастика",
+                "978-5-699-97309-5");
+        bookCsvAdapter.append(book0);
+        Book book1 = new Book(
+                "Будущее",
+                "Глуховский",
+                "Научная фантастика",
+                "978-5-17-118366-0");
+        bookCsvAdapter.append(book1);
+        Book book = new Book(
+                "Сегодня",
+                "Иванов Иван",
+                "Физика",
+                "888-5-906902-91-7");
+        bookCsvAdapter.append(book);
 
         // * По желанию можете придумать и свои сущности
     }
 
     @After
-    public void deleteFile() {
-        // TODO: удалить файлы после тестирования
+    public void deleteFile() throws IOException{
+        getBookPath().toFile().delete();
     }
 
     @Test
     public void testRead() throws IOException {
 
-        Path bookFilePath = Paths.get("test-book-file.csv");
-
-        BufferedReader bookReader = new BufferedReader(
-            new FileReader(bookFilePath.toFile()));
-
-        BufferedWriter bookWriter = new BufferedWriter(
-            new FileWriter(bookFilePath.toFile(), true));
-
-        CSVAdapter<Book> bookCsvAdapter =
-            new CSVAdapter(Book.class, bookReader, bookWriter);
+        CSVAdapter<Book> bookCsvAdapter = getBookCSVAdapter();
 
         Book book1 = bookCsvAdapter.read(1);
         assertEquals("Глуховский", book1.getAuthor());
@@ -66,16 +79,7 @@ public class CSVAdapterTest {
     @Test
     public void testAppend() throws IOException {
 
-        Path bookFilePath = Paths.get("test-book-file.csv");
-
-        BufferedReader bookReader = new BufferedReader(
-            new FileReader(bookFilePath.toFile()));
-
-        BufferedWriter bookWriter = new BufferedWriter(
-            new FileWriter(bookFilePath.toFile(), true));
-
-        CSVAdapter<Book> bookCsvAdapter =
-            new CSVAdapter(Book.class, bookReader, bookWriter);
+        CSVAdapter<Book> bookCsvAdapter = getBookCSVAdapter();
 
         Book newBook = new Book(
             "Чертоги разума. Убей в себе идиота!",
@@ -88,5 +92,21 @@ public class CSVAdapterTest {
         assertEquals(newBook, bookAtIndex);
 
         // TODO: написать тесты для проверки сущности автора
+    }
+
+    private CSVAdapter<Book> getBookCSVAdapter() throws IOException {
+        Path bookFilePath = getBookPath();
+
+        BufferedReader bookReader = new BufferedReader(
+                new FileReader(bookFilePath.toFile()));
+
+        BufferedWriter bookWriter = new BufferedWriter(
+                new FileWriter(bookFilePath.toFile(), true));
+
+        return (CSVAdapter<Book>) new CSVAdapter(Book.class, bookReader, bookWriter);
+    }
+
+    private Path getBookPath() {
+        return Paths.get("test-book-file.csv");
     }
 }

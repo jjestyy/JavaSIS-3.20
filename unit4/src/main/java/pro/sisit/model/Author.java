@@ -2,10 +2,13 @@ package pro.sisit.model;
 
 import java.util.Objects;
 
-public class Author {
+public class Author implements CSVStorable{
 
     private String name;
     private String birthPlace;
+
+    public Author() {
+    }
 
     public Author(String name, String birthPlace) {
         this.name = name;
@@ -36,5 +39,19 @@ public class Author {
     @Override
     public int hashCode() {
         return Objects.hash(getName(), getBirthPlace());
+    }
+
+    public void parseStringFromCSV(String string) {
+        try {
+            String[] strArr = string.split(";", 2);
+            this.name = strArr[0];
+            this.birthPlace = strArr[1];
+        } catch (Exception e) {
+            System.out.println("Bad string to parse as Author: " + string);
+        }
+    }
+
+    public String makeStringForCSV() {
+        return name + ";" + birthPlace;
     }
 }

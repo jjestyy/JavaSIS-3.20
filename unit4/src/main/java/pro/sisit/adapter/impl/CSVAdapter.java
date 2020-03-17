@@ -3,10 +3,11 @@ package pro.sisit.adapter.impl;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import pro.sisit.adapter.IOAdapter;
+import pro.sisit.model.CSVStorable;
 
 // 1. TODO: написать реализацию адаптера
 
-public class CSVAdapter<T> implements IOAdapter<T> {
+public class CSVAdapter<T extends CSVStorable> implements IOAdapter<T> {
 
     private Class<T> entityType;
     private BufferedReader reader;
@@ -22,11 +23,31 @@ public class CSVAdapter<T> implements IOAdapter<T> {
 
     @Override
     public T read(int index) {
-        throw new RuntimeException("Метод read не реализован");
+        T object = null;
+        try (BufferedReader reader = this.reader) {
+            object  =  (T) entityType.getDeclaredConstructor().newInstance();
+            for (int i = 0; i <= index; i++) {
+                String line = reader.readLine();
+                if(i == index) {
+                    object.parseStringFromCSV(line);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return object;
     }
 
     @Override
     public int append(T entity) {
-        throw new RuntimeException("Метод append не реализован");
+        int index = 0;
+        try (BufferedReader reader = this.reader) {
+            while (reader.readLine() != null) index++;
+            writer.append(entity.makeStringForCSV());
+            index++;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return index;
     }
 }
