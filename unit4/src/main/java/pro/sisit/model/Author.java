@@ -52,6 +52,6 @@ public class Author implements CSVStorable{
     }
 
     public String makeStringForCSV() {
-        return name + ";" + birthPlace + System.lineSeparator();
+        return String.join(";" ,name, birthPlace) + System.lineSeparator();
     }
 }

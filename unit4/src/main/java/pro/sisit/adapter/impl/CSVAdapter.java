@@ -7,8 +7,6 @@ import java.util.List;
 import pro.sisit.adapter.IOAdapter;
 import pro.sisit.model.CSVStorable;
 
-// 1. TODO: написать реализацию адаптера
-
 public class CSVAdapter<T extends CSVStorable> implements IOAdapter<T> {
 
     private Class<T> entityType;

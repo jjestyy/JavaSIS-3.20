@@ -28,8 +28,6 @@ public class CSVAdapterTest {
         // TODO: создать и заполнить csv-файл для сущности Book
 
         getBookPath().toFile().createNewFile();
-        CSVAdapter<Book> bookCsvAdapter = getBookCSVAdapter();
-
         Book book0 = new Book(
                 "Убик",
                 "Филип Дик",
@@ -45,7 +43,8 @@ public class CSVAdapterTest {
                 "Иванов Иван",
                 "Физика",
                 "888-5-906902-91-7");
-        bookCsvAdapter.write(Arrays.asList(book0, book1, book));
+        getBookCSVAdapter().write(Arrays.asList(book0, book1, book));
+
 
         // * По желанию можете придумать и свои сущности
     }
