@@ -50,9 +50,9 @@ public class CSVAdapter<T extends CSVStorable> implements IOAdapter<T> {
         return index;
     }
 
-    public void write(List<T> entityes) {
+    public void write(List<T> entities) {
         try (BufferedWriter writer = this.writer) {
-            for (T entity: entityes) {
+            for (T entity: entities) {
                 writer.write(entity.makeStringForCSV());
             }
         } catch (Exception e) {
