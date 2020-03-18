@@ -9,6 +9,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,46 +35,41 @@ public class CSVAdapterTest {
                 "Филип Дик",
                 "Научная фантастика",
                 "978-5-699-97309-5");
-        bookCsvAdapter.append(book0);
         Book book1 = new Book(
                 "Будущее",
                 "Глуховский",
                 "Научная фантастика",
                 "978-5-17-118366-0");
-        bookCsvAdapter.append(book1);
         Book book = new Book(
                 "Сегодня",
                 "Иванов Иван",
                 "Физика",
                 "888-5-906902-91-7");
-        bookCsvAdapter.append(book);
+        bookCsvAdapter.write(Arrays.asList(book0, book1, book));
 
         // * По желанию можете придумать и свои сущности
     }
 
     @After
-    public void deleteFile() throws IOException{
+    public void deleteFile() {
         getBookPath().toFile().delete();
     }
 
     @Test
     public void testRead() throws IOException {
-
-        CSVAdapter<Book> bookCsvAdapter = getBookCSVAdapter();
-
-        Book book1 = bookCsvAdapter.read(1);
+        Book expectedBook0 = new Book(
+                "Убик",
+                "Филип Дик",
+                "Научная фантастика",
+                "978-5-699-97309-5");
+        Book actualBook0 = getBookCSVAdapter().read(0);
+        assertEquals(expectedBook0, actualBook0);
+        Book book1 = getBookCSVAdapter().read(1);
         assertEquals("Глуховский", book1.getAuthor());
         assertEquals("Будущее", book1.getName());
         assertEquals("978-5-17-118366-0", book1.getIsbn());
         assertEquals("Научная фантастика", book1.getGenre());
 
-        Book expectedBook0 = new Book(
-            "Убик",
-            "Филип Дик",
-            "Научная фантастика",
-            "978-5-699-97309-5");
-        Book actualBook0 = bookCsvAdapter.read(0);
-        assertEquals(expectedBook0, actualBook0);
 
         // TODO: написать тесты для проверки сущности автора
     }
@@ -79,16 +77,14 @@ public class CSVAdapterTest {
     @Test
     public void testAppend() throws IOException {
 
-        CSVAdapter<Book> bookCsvAdapter = getBookCSVAdapter();
-
         Book newBook = new Book(
             "Чертоги разума. Убей в себе идиота!",
             "Андрей Курпатов",
             "Психология",
             "978-5-906902-91-7");
 
-        int bookIndex = bookCsvAdapter.append(newBook);
-        Book bookAtIndex = bookCsvAdapter.read(bookIndex);
+        int bookIndex = getBookCSVAdapter().append(newBook);
+        Book bookAtIndex = getBookCSVAdapter().read(bookIndex);
         assertEquals(newBook, bookAtIndex);
 
         // TODO: написать тесты для проверки сущности автора

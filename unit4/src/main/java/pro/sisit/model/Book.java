@@ -68,6 +68,6 @@ public class Book implements CSVStorable{
     }
 
     public String makeStringForCSV() {
-        return name + ";" + author + ";" + genre + ";" + isbn;
+        return name + ";" + author + ";" + genre + ";" + isbn + System.lineSeparator();
     }
 }
