@@ -18,6 +18,7 @@ import org.junit.Test;
 import pro.sisit.adapter.impl.CSVAdapter;
 import pro.sisit.model.Author;
 import pro.sisit.model.Book;
+import pro.sisit.model.Publisher;
 
 public class CSVAdapterTest {
 
@@ -48,8 +49,11 @@ public class CSVAdapterTest {
         Author author = new Author("Марк Твен", "Нью Йорк");
         getAuthorCSVAdapter().write(Arrays.asList(author0, author1, author));
 
+        getPublisherPath().toFile().createNewFile();
+        Publisher publisher0 = new Publisher("Эксмо", 2016);
+        Publisher publisher1 = new Publisher("New Age", 2000);
+        getPublisherCSVAdapter().write(Arrays.asList(publisher0, publisher1));
 
-        // * По желанию можете придумать и свои сущности
     }
     @After
     public void deleteFile() {
@@ -82,6 +86,12 @@ public class CSVAdapterTest {
         assertEquals(expectedAuthor1,actualAuthor1);
         assertEquals(expectedAuthor ,actualAuthor);
 
+        Publisher expectedPublisher0 = new Publisher("Эксмо", 2016);
+        Publisher expectedPublisher1 = new Publisher("New Age", 2000);
+        Publisher actualPublisher0 = getPublisherCSVAdapter().read(0);
+        Publisher actualPublisher1 = getPublisherCSVAdapter().read(1);
+        assertEquals(expectedPublisher0,actualPublisher0);
+        assertEquals(expectedPublisher1,actualPublisher1);
     }
 
     @Test
@@ -123,6 +133,15 @@ public class CSVAdapterTest {
     private Path getAuthorPath() {
         return Paths.get("test-author-file.csv");
     }
+    
+    private CSVAdapter<Publisher> getPublisherCSVAdapter() throws IOException {
+        BufferedReader publisherReader = new BufferedReader(new FileReader(getPublisherPath().toFile()));
+        BufferedWriter publisherWriter = new BufferedWriter(new FileWriter(getPublisherPath().toFile(), true));
+        return (CSVAdapter<Publisher>) new CSVAdapter(Publisher.class, publisherReader, publisherWriter);
+    }
 
+    private Path getPublisherPath() {
+        return Paths.get("test-publisher-file.csv");
+    }
 
 }
