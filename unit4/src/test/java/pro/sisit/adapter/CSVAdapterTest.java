@@ -16,16 +16,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import pro.sisit.adapter.impl.CSVAdapter;
+import pro.sisit.model.Author;
 import pro.sisit.model.Book;
-
-// TODO: 2. Описать тестовые кейсы
 
 public class CSVAdapterTest {
 
     @Before
     public void createFile() throws IOException {
-        // TODO: создать и заполнить csv-файл для сущности Author
-        // TODO: создать и заполнить csv-файл для сущности Book
 
         getBookPath().toFile().createNewFile();
         Book book0 = new Book(
@@ -44,14 +41,20 @@ public class CSVAdapterTest {
                 "Физика",
                 "888-5-906902-91-7");
         getBookCSVAdapter().write(Arrays.asList(book0, book1, book));
+        
+        getAuthorPath().toFile().createNewFile();
+        Author author0 = new Author("Тургенев", "Московская область");
+        Author author1 = new Author("Пушкин", "Москва");
+        Author author = new Author("Марк Твен", "Нью Йорк");
+        getAuthorCSVAdapter().write(Arrays.asList(author0, author1, author));
 
 
         // * По желанию можете придумать и свои сущности
     }
-
     @After
     public void deleteFile() {
         getBookPath().toFile().delete();
+        getAuthorPath().toFile().delete();
     }
 
     @Test
@@ -69,8 +72,16 @@ public class CSVAdapterTest {
         assertEquals("978-5-17-118366-0", book1.getIsbn());
         assertEquals("Научная фантастика", book1.getGenre());
 
+        Author expectedAuthor0 = new Author("Тургенев", "Московская область");
+        Author expectedAuthor1 = new Author("Пушкин", "Москва");
+        Author expectedAuthor = new Author("Марк Твен", "Нью Йорк");
+        Author actualAuthor0 = getAuthorCSVAdapter().read(0);
+        Author actualAuthor1 = getAuthorCSVAdapter().read(1);
+        Author actualAuthor  = getAuthorCSVAdapter().read(2);
+        assertEquals(expectedAuthor0,actualAuthor0);
+        assertEquals(expectedAuthor1,actualAuthor1);
+        assertEquals(expectedAuthor ,actualAuthor);
 
-        // TODO: написать тесты для проверки сущности автора
     }
 
     @Test
@@ -86,22 +97,32 @@ public class CSVAdapterTest {
         Book bookAtIndex = getBookCSVAdapter().read(bookIndex);
         assertEquals(newBook, bookAtIndex);
 
-        // TODO: написать тесты для проверки сущности автора
+        Author newAuthor = new Author("Андрей Курпатов", "Cызрань");
+        int authorIndex = getAuthorCSVAdapter().append(newAuthor);
+        Author authorAtIndex = getAuthorCSVAdapter().read(authorIndex);
+        assertEquals(newAuthor, authorAtIndex);
+
     }
 
     private CSVAdapter<Book> getBookCSVAdapter() throws IOException {
-        Path bookFilePath = getBookPath();
-
-        BufferedReader bookReader = new BufferedReader(
-                new FileReader(bookFilePath.toFile()));
-
-        BufferedWriter bookWriter = new BufferedWriter(
-                new FileWriter(bookFilePath.toFile(), true));
-
+        BufferedReader bookReader = new BufferedReader(new FileReader(getBookPath().toFile()));
+        BufferedWriter bookWriter = new BufferedWriter(new FileWriter(getBookPath().toFile(), true));
         return (CSVAdapter<Book>) new CSVAdapter(Book.class, bookReader, bookWriter);
     }
 
     private Path getBookPath() {
         return Paths.get("test-book-file.csv");
     }
+
+    private CSVAdapter<Author> getAuthorCSVAdapter() throws IOException {
+        BufferedReader authorReader = new BufferedReader(new FileReader(getAuthorPath().toFile()));
+        BufferedWriter authorWriter = new BufferedWriter(new FileWriter(getAuthorPath().toFile(), true));
+        return (CSVAdapter<Author>) new CSVAdapter(Author.class, authorReader, authorWriter);
+    }
+
+    private Path getAuthorPath() {
+        return Paths.get("test-author-file.csv");
+    }
+
+
 }
