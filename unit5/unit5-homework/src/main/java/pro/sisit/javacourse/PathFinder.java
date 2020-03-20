@@ -14,9 +14,9 @@ public class PathFinder {
      * Если список transports равен null, то оптимальеый транспорт тоже равен null.
      */
     public Transport getOptimalTransport(DeliveryTask deliveryTask, List<Transport> transports) {
+        if(deliveryTask == null || transports == null) return null;
         Map<RouteType, BigDecimal> routeLengthLink = deliveryTask.getRoutes().stream()
                 .collect(Collectors.toMap(Route::getType, Route::getLength));
-
         Optional<Transport> optionalTransport = transports.stream()
                 .filter(transport -> routeLengthLink.containsKey(transport.getType()))
                 .filter(transport -> transport.getVolume().compareTo(deliveryTask.getVolume()) >= 0)
