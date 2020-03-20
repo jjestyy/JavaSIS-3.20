@@ -55,7 +55,7 @@ public class Book implements CSVStorable{
         return Objects.hash(getName(), getAuthor(), getGenre(), getIsbn());
     }
 
-    public void parseStringFromCSV(String string) {
+    public void parseStringFromCSV(String string, String delimiter) {
         try {
             String[] strArr = string.split(";", 4);
             this.name = strArr[0];
@@ -68,7 +68,7 @@ public class Book implements CSVStorable{
         }
     }
 
-    public String makeStringForCSV() {
-        return String.join(";",name, author, genre, isbn) + System.lineSeparator();
+    public String makeStringForCSV(String delimiter) {
+        return String.join(delimiter,name, author, genre, isbn);
     }
 }

@@ -37,7 +37,7 @@ public class Publisher implements CSVStorable{
     }
 
 
-    public void parseStringFromCSV(String string) {
+    public void parseStringFromCSV(String string, String delimiter) {
         try {
             String[] strArr = string.split(";", 2);
             this.name = strArr[0];
@@ -48,7 +48,7 @@ public class Publisher implements CSVStorable{
         }
     }
 
-    public String makeStringForCSV() {
-        return String.join(";" ,name, String.valueOf(year)) + System.lineSeparator();
+    public String makeStringForCSV(String delimiter) {
+        return String.join(delimiter,name, String.valueOf(year)) ;
     }
 }

@@ -130,7 +130,7 @@ public class CSVAdapterTest {
     private CSVAdapter<Book> getBookCSVAdapter() throws IOException {
         BufferedReader bookReader = new BufferedReader(new FileReader(getBookPath().toFile()));
         BufferedWriter bookWriter = new BufferedWriter(new FileWriter(getBookPath().toFile(), true));
-        return (CSVAdapter<Book>) new CSVAdapter(Book.class, bookReader, bookWriter);
+        return (CSVAdapter<Book>) new CSVAdapter(Book.class, bookReader, bookWriter, ";");
     }
 
     private Path getBookPath() {
@@ -140,7 +140,7 @@ public class CSVAdapterTest {
     private CSVAdapter<Author> getAuthorCSVAdapter() throws IOException {
         BufferedReader authorReader = new BufferedReader(new FileReader(getAuthorPath().toFile()));
         BufferedWriter authorWriter = new BufferedWriter(new FileWriter(getAuthorPath().toFile(), true));
-        return (CSVAdapter<Author>) new CSVAdapter(Author.class, authorReader, authorWriter);
+        return (CSVAdapter<Author>) new CSVAdapter(Author.class, authorReader, authorWriter, ",");
     }
 
     private Path getAuthorPath() {
@@ -150,7 +150,7 @@ public class CSVAdapterTest {
     private CSVAdapter<Publisher> getPublisherCSVAdapter() throws IOException {
         BufferedReader publisherReader = new BufferedReader(new FileReader(getPublisherPath().toFile()));
         BufferedWriter publisherWriter = new BufferedWriter(new FileWriter(getPublisherPath().toFile(), true));
-        return (CSVAdapter<Publisher>) new CSVAdapter(Publisher.class, publisherReader, publisherWriter);
+        return (CSVAdapter<Publisher>) new CSVAdapter(Publisher.class, publisherReader, publisherWriter, ";");
     }
 
     private Path getPublisherPath() {

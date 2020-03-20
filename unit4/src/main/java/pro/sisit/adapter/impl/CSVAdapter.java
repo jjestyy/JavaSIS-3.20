@@ -12,13 +12,15 @@ public class CSVAdapter<T extends CSVStorable> implements IOAdapter<T> {
     private Class<T> entityType;
     private BufferedReader reader;
     private BufferedWriter writer;
+    private String delimiter = ";";
 
     public CSVAdapter(Class<T> entityType, BufferedReader reader,
-        BufferedWriter writer) {
+        BufferedWriter writer, String delimiter) {
 
         this.entityType = entityType;
         this.reader = reader;
         this.writer = writer;
+        this.delimiter = delimiter;
     }
 
     @Override
@@ -29,7 +31,7 @@ public class CSVAdapter<T extends CSVStorable> implements IOAdapter<T> {
             for (int i = 0; i <= index; i++) {
                 String line = reader.readLine();
                 if(i == index) {
-                    object.parseStringFromCSV(line);
+                    object.parseStringFromCSV(line, delimiter);
                 }
             }
         } catch (Exception e) {
@@ -44,7 +46,7 @@ public class CSVAdapter<T extends CSVStorable> implements IOAdapter<T> {
         int index = 0;
         try (BufferedReader reader = this.reader; BufferedWriter writer = this.writer) {
             while (reader.readLine() != null ) index++;
-            writer.write(entity.makeStringForCSV());
+            writer.write(entity.makeStringForCSV(delimiter));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -54,7 +56,8 @@ public class CSVAdapter<T extends CSVStorable> implements IOAdapter<T> {
     public void write(List<T> entities) {
         try (BufferedWriter writer = this.writer) {
             for (T entity: entities) {
-                writer.write(entity.makeStringForCSV());
+                writer.write(entity.makeStringForCSV(delimiter));
+                writer.newLine();
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
