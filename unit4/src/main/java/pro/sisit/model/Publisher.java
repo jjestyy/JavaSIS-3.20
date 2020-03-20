@@ -36,6 +36,13 @@ public class Publisher implements CSVStorable{
         return Objects.hash(name, year);
     }
 
+    @Override
+    public String toString() {
+        return "Publisher{" +
+                "name='" + name + '\'' +
+                ", year=" + year +
+                '}';
+    }
 
     public void parseStringFromCSV(String string, String delimiter) {
         try {

@@ -16,6 +16,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import pro.sisit.adapter.impl.CSVAdapter;
+import pro.sisit.adapter.impl.CSVAdapterWrapper;
 import pro.sisit.model.Author;
 import pro.sisit.model.Book;
 import pro.sisit.model.Publisher;
@@ -137,20 +138,22 @@ public class CSVAdapterTest {
         return Paths.get("test-book-file.csv");
     }
 
-    private CSVAdapter<Author> getAuthorCSVAdapter() throws IOException {
+    private CSVAdapterWrapper<Author> getAuthorCSVAdapter() throws IOException {
         BufferedReader authorReader = new BufferedReader(new FileReader(getAuthorPath().toFile()));
         BufferedWriter authorWriter = new BufferedWriter(new FileWriter(getAuthorPath().toFile(), true));
-        return (CSVAdapter<Author>) new CSVAdapter(Author.class, authorReader, authorWriter, ",");
+        CSVAdapter<Author> CSVAdapter = new CSVAdapter(Publisher.class, authorReader, authorWriter, ";");
+        return (CSVAdapterWrapper<Author>) new CSVAdapterWrapper(CSVAdapter);
     }
 
     private Path getAuthorPath() {
         return Paths.get("test-author-file.csv");
     }
     
-    private CSVAdapter<Publisher> getPublisherCSVAdapter() throws IOException {
+    private CSVAdapterWrapper<Publisher> getPublisherCSVAdapter() throws IOException {
         BufferedReader publisherReader = new BufferedReader(new FileReader(getPublisherPath().toFile()));
         BufferedWriter publisherWriter = new BufferedWriter(new FileWriter(getPublisherPath().toFile(), true));
-        return (CSVAdapter<Publisher>) new CSVAdapter(Publisher.class, publisherReader, publisherWriter, ";");
+        CSVAdapter<Publisher> CSVAdapter = new CSVAdapter(Publisher.class, publisherReader, publisherWriter, ";");
+        return (CSVAdapterWrapper<Publisher>) new CSVAdapterWrapper(CSVAdapter);
     }
 
     private Path getPublisherPath() {

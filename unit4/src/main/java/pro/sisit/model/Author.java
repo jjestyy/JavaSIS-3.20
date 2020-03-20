@@ -41,6 +41,14 @@ public class Author implements CSVStorable{
         return Objects.hash(getName(), getBirthPlace());
     }
 
+    @Override
+    public String toString() {
+        return "Author{" +
+                "name='" + name + '\'' +
+                ", birthPlace='" + birthPlace + '\'' +
+                '}';
+    }
+
     public void parseStringFromCSV(String string, String delimiter) {
         try {
             String[] strArr = string.split(";", 2);
