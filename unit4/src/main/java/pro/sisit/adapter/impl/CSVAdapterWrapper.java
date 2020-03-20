@@ -1,10 +1,11 @@
 package pro.sisit.adapter.impl;
 
+import pro.sisit.adapter.IOAdapter;
 import pro.sisit.model.CSVStorable;
 
 import java.util.List;
 
-public class CSVAdapterWrapper<T extends CSVStorable>  {
+public class CSVAdapterWrapper <T extends CSVStorable> implements IOAdapter<T> {
     private T entity;
 
     public CSVAdapterWrapper(CSVAdapter<T> adapter) {
