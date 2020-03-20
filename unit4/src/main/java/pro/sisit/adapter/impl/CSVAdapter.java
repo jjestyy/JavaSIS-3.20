@@ -34,6 +34,7 @@ public class CSVAdapter<T extends CSVStorable> implements IOAdapter<T> {
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
         return object;
     }

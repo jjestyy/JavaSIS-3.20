@@ -48,6 +48,7 @@ public class Author implements CSVStorable{
             this.birthPlace = strArr[1];
         } catch (Exception e) {
             System.out.println("Bad string to parse as Author: " + string);
+            throw new RuntimeException("Bad string to parse - " + string);
         }
     }
 

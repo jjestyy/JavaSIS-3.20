@@ -64,6 +64,7 @@ public class Book implements CSVStorable{
             this.isbn = strArr[3];
         } catch (Exception e) {
             System.out.println("Bad string to parse as Book : " + string);
+            throw new RuntimeException("Bad string to parse - " + string);
         }
     }
 

@@ -52,13 +52,15 @@ public class CSVAdapterTest {
         getPublisherPath().toFile().createNewFile();
         Publisher publisher0 = new Publisher("Эксмо", 2016);
         Publisher publisher1 = new Publisher("New Age", 2000);
-        getPublisherCSVAdapter().write(Arrays.asList(publisher0, publisher1));
+        Publisher publisher3 = new Publisher("New ;Age", 2000);
+        getPublisherCSVAdapter().write(Arrays.asList(publisher0, publisher1, publisher3));
 
     }
     @After
     public void deleteFile() {
         getBookPath().toFile().delete();
         getAuthorPath().toFile().delete();
+        getPublisherPath().toFile().delete();
     }
 
     @Test
@@ -92,6 +94,17 @@ public class CSVAdapterTest {
         Publisher actualPublisher1 = getPublisherCSVAdapter().read(1);
         assertEquals(expectedPublisher0,actualPublisher0);
         assertEquals(expectedPublisher1,actualPublisher1);
+
+        //about exceptions
+
+
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testAboutExceptions()  throws IOException {
+        Publisher expectedPublisher3 = new Publisher("Эксмо", 2016);
+        Publisher actualPublisher3 = getPublisherCSVAdapter().read(2);
+        assertEquals(expectedPublisher3,actualPublisher3);
     }
 
     @Test

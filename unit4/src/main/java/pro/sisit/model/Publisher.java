@@ -44,6 +44,7 @@ public class Publisher implements CSVStorable{
             this.year = Integer.parseInt(strArr[1]);
         } catch (Exception e) {
             System.out.println("Bad string to parse as Publisher: " + string);
+            throw new RuntimeException("Bad string to parse - " + string);
         }
     }
 
