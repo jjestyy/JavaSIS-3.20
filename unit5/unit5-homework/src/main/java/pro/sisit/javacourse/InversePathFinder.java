@@ -2,9 +2,16 @@ package pro.sisit.javacourse;
 
 import pro.sisit.javacourse.inverse.InverseDeliveryTask;
 import pro.sisit.javacourse.inverse.Solution;
+import pro.sisit.javacourse.optimal.DeliveryTask;
+import pro.sisit.javacourse.optimal.Route;
+import pro.sisit.javacourse.optimal.Transport;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class InversePathFinder {
 
@@ -24,7 +31,24 @@ public class InversePathFinder {
      * то функция должна вернуть пустой список доступных решений.
      */
     public List<Solution> getAllSolutions(InverseDeliveryTask task) {
-        // ToDo: realize me!
-        return new ArrayList<>();
+        List<Solution> allSolutions = new ArrayList<>();
+        if (task == null || task.getTransports() == null || task.getTasks() == null || task.getPriceRange() == null) return  allSolutions;
+         task.getTasks().forEach(
+                 deliveryTask -> task.getTransports().forEach(
+                         transport -> {
+                             if(deliveryTask.getRoutes().stream().anyMatch(route -> route.getType() == transport.getType())) {
+                                 allSolutions.add(new Solution(deliveryTask, transport, getCost(deliveryTask, transport) )); }}
+                         ));
+        return allSolutions.stream()
+                .filter(solution -> solution.getPrice() != null)
+                .filter(solution -> task.getPriceRange().isInRange(solution.getPrice()))
+                .filter(solution -> solution.getTransport().getVolume().compareTo(solution.getDeliveryTask().getVolume()) >= 0)
+                .sorted(Comparator.comparing(Solution::getPrice).reversed().thenComparing(solution -> solution.getDeliveryTask().getName()))
+                .collect(Collectors.toList());
+    }
+
+    private BigDecimal getCost (DeliveryTask deliveryTask, Transport transport) {
+        Optional<Route> requiredRoute = deliveryTask.getRoutes().stream().filter(route -> route.getType() == transport.getType()).findFirst();
+        return requiredRoute.map(route -> transport.getPrice().multiply(route.getLength()) ).orElse(null);
     }
 }
