@@ -31,15 +31,14 @@ public class InversePathFinder {
      * то функция должна вернуть пустой список доступных решений.
      */
     public List<Solution> getAllSolutions(InverseDeliveryTask task) {
-        List<Solution> allSolutions = new ArrayList<>();
-        if (task == null || task.getTransports() == null || task.getTasks() == null || task.getPriceRange() == null) return  allSolutions;
-         task.getTasks().forEach(
-                 deliveryTask -> task.getTransports().forEach(
-                         transport -> {
-                             if(deliveryTask.getRoutes().stream().anyMatch(route -> route.getType() == transport.getType())) {
-                                 allSolutions.add(new Solution(deliveryTask, transport, getCost(deliveryTask, transport) )); }}
-                         ));
-        return allSolutions.stream()
+        if (task == null || task.getTransports() == null
+                || task.getTasks() == null || task.getPriceRange() == null) {
+            return new ArrayList<>();
+        }
+
+        return task.getTasks().stream()
+                .flatMap(deliveryTask -> task.getTransports().stream()
+                .map(transport -> new Solution(deliveryTask, transport, getCost(deliveryTask, transport))))
                 .filter(solution -> solution.getPrice() != null)
                 .filter(solution -> task.getPriceRange().isInRange(solution.getPrice()))
                 .filter(solution -> solution.getTransport().getVolume().compareTo(solution.getDeliveryTask().getVolume()) >= 0)
