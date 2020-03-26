@@ -12,6 +12,9 @@ plugins {
 
     // Apply the application plugin to add support for building an application
     id 'application'
+
+    id "io.freefair.lombok" version "5.0.0-rc4"
+
 }
 
 repositories {
