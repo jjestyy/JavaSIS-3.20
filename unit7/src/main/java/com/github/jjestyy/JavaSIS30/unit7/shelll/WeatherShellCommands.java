@@ -9,7 +9,9 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @ShellComponent
@@ -24,14 +26,32 @@ public class WeatherShellCommands {
 
     @ShellMethod("Get weather")
     public String weather(@ShellOption(defaultValue = "Krasnoyarsk") String city) {
-        WeatherRecord weatherRecord = new WeatherRecord(city, Float.parseFloat(weatherService.getWeather(city)), new Date());
-        weatherDataService.save(weatherRecord);
-        return weatherRecord.toString();
+        try {
+            WeatherRecord weatherRecord = new WeatherRecord(city, Float.parseFloat(weatherService.getWeather(city)), new Date());
+            weatherDataService.save(weatherRecord);
+            return weatherRecord.toString();
+        } catch (Exception e) {
+            return "Some bad input";
+        }
     }
 
     @ShellMethod("Show all")
     public String showAll(){
         return weatherDataService.findAll().stream().map(WeatherRecord::toString)
                 .collect(Collectors.joining(System.lineSeparator()));
+    }
+
+    @ShellMethod("Show average by months for city")
+    public String statistics(@ShellOption (defaultValue = "") String city,
+                             @ShellOption (defaultValue = "") String periodStart,
+                             @ShellOption(defaultValue = "") String periodEnd) {
+        try {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy MMMM", Locale.ENGLISH);
+            return weatherDataService.findWithConditions(city, periodStart, periodEnd).stream()
+                    .map(weatherRecord -> df.format(weatherRecord.getDate()) + " " + weatherRecord.getCity() + " | " + weatherRecord.getWeather())
+                    .collect(Collectors.joining(System.lineSeparator()));
+        } catch (Exception e) {
+            return e.getMessage();
+        }
     }
 }

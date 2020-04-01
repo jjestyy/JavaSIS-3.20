@@ -5,7 +5,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -19,7 +25,54 @@ public class WeatherDataServiceJdbcImpl implements WeatherDataService {
     @Override
     public List<WeatherRecord> findAll() {
         return jdbcTemplate.query("SELECT city, temp, date from weather",
-                (rs, rowNum) -> new WeatherRecord(rs.getString("city"),rs.getFloat("temp"), rs.getDate("date")));
+                (rs, rowNum) -> new WeatherRecord(rs.getString("city"), rs.getFloat("temp"), rs.getDate("date")));
+    }
+    @Override
+    public List<WeatherRecord> findWithConditions(String city, String periodStart, String periodEnd) {
+        String sql = "SELECT " +
+                "YEAR(date) as year, MONTH(date) as month, city, AVG(temp) as temp " +
+                "FROM WEATHER ";
+        List<String> conditions = new ArrayList<>();
+        SimpleDateFormat formatter =new SimpleDateFormat("yyyy-mm-dd");
+        if(!periodStart.equals("")) {
+            try {
+                formatter.parse(periodStart);
+                conditions.add(" date > '" + periodStart + "' ");
+            } catch (Exception e) {
+                throw new RuntimeException("Bad date at start");
+            }
+        }
+        if(!periodEnd.equals("")) {
+            try {
+                formatter.parse(periodEnd);
+                conditions.add(" date < '" + periodEnd + "' ");
+            } catch (Exception e) {
+                throw new RuntimeException("Bad date at end");
+            }
+        }
+        if (!city.equals("")) {
+            conditions.add(" city = '" + city + "'");
+        }
+        if(conditions.size()>0) {
+            sql+= " WHERE ";
+            sql+= String.join(" AND ", conditions);
+        }
+        sql +="GROUP BY MONTH(date), YEAR(date), city "+
+        "ORDER BY MONTH(date), YEAR(date), city ";
+        SimpleDateFormat formatterOnlyYearAndMonth = new SimpleDateFormat("yyyy-MM");
+        return jdbcTemplate.query(sql,
+                (rs, rowNum) ->
+                {
+                    try {
+                        return new WeatherRecord(
+                                rs.getString("city"),
+                                rs.getFloat("temp"),
+                                formatterOnlyYearAndMonth.parse( rs.getString("year") + "-" + rs.getString("month")));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                });
     }
 
     @Override

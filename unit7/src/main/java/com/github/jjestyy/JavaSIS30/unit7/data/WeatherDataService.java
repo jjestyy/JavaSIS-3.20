@@ -8,5 +8,6 @@ import java.util.Map;
 public interface WeatherDataService {
     int save(WeatherRecord weatherRecord);
     List<WeatherRecord> findAll();
+    List<WeatherRecord> findWithConditions(String city, String periodStart, String periodEnd);
     void prepareDB();
 }
