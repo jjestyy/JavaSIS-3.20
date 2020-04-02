@@ -2,9 +2,9 @@ package com.github.jjestyy.JavaSIS30.unit7.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NonNull;
 
-import java.util.Date;
+import java.time.LocalDate;
+
 @Data
 @AllArgsConstructor
 public class WeatherRecord {
@@ -13,5 +13,5 @@ public class WeatherRecord {
 
     private float weather;
 
-    private Date date;
+    private LocalDate date;
 }

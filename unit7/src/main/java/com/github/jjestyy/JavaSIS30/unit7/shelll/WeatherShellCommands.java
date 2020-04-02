@@ -10,6 +10,9 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -27,7 +30,7 @@ public class WeatherShellCommands {
     @ShellMethod("Get weather")
     public String weather(@ShellOption(defaultValue = "Krasnoyarsk") String city) {
         try {
-            WeatherRecord weatherRecord = new WeatherRecord(city, Float.parseFloat(weatherService.getWeather(city)), new Date());
+            WeatherRecord weatherRecord = new WeatherRecord(city, Float.parseFloat(weatherService.getWeather(city)), LocalDate.now());
             weatherDataService.save(weatherRecord);
             return weatherRecord.toString();
         } catch (Exception e) {
@@ -46,9 +49,10 @@ public class WeatherShellCommands {
                              @ShellOption (defaultValue = "") String periodStart,
                              @ShellOption(defaultValue = "") String periodEnd) {
         try {
-            SimpleDateFormat df = new SimpleDateFormat("yyyy MMMM", Locale.ENGLISH);
+            DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy MMMM", Locale.ENGLISH);
             return weatherDataService.findWithConditions(city, periodStart, periodEnd).stream()
-                    .map(weatherRecord -> df.format(weatherRecord.getDate()) + " " + weatherRecord.getCity() + " | " + weatherRecord.getWeather())
+                    .sorted(Comparator.comparing(WeatherRecord::getDate))
+                    .map(weatherRecord -> weatherRecord.getDate().format(df) + " " + weatherRecord.getCity() + " | " + weatherRecord.getWeather())
                     .collect(Collectors.joining(System.lineSeparator()));
         } catch (Exception e) {
             return e.getMessage();

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +27,7 @@ public class WeatherDataServiceJdbcImpl implements WeatherDataService {
     @Override
     public List<WeatherRecord> findAll() {
         return jdbcTemplate.query("SELECT city, temp, date from weather",
-                (rs, rowNum) -> new WeatherRecord(rs.getString("city"), rs.getFloat("temp"), rs.getDate("date")));
+                (rs, rowNum) -> new WeatherRecord(rs.getString("city"), rs.getFloat("temp"), rs.getDate("date").toLocalDate()));
     }
     @Override
     public List<WeatherRecord> findWithConditions(String city, String periodStart, String periodEnd) {
@@ -59,7 +61,7 @@ public class WeatherDataServiceJdbcImpl implements WeatherDataService {
         }
         sql +="GROUP BY MONTH(date), YEAR(date), city "+
         "ORDER BY MONTH(date), YEAR(date), city ";
-        SimpleDateFormat formatterOnlyYearAndMonth = new SimpleDateFormat("yyyy-MM");
+        DateTimeFormatter formatterOnlyYearAndMonth = DateTimeFormatter.ofPattern("yyyy-M-d");
         return jdbcTemplate.query(sql,
                 (rs, rowNum) ->
                 {
@@ -67,8 +69,8 @@ public class WeatherDataServiceJdbcImpl implements WeatherDataService {
                         return new WeatherRecord(
                                 rs.getString("city"),
                                 rs.getFloat("temp"),
-                                formatterOnlyYearAndMonth.parse( rs.getString("year") + "-" + rs.getString("month")));
-                    } catch (ParseException e) {
+                                LocalDate.parse(rs.getString("year") + "-" + rs.getString("month") + "-01", formatterOnlyYearAndMonth));
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     return null;

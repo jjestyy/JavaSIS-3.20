@@ -12,6 +12,7 @@ import org.springframework.test.context.event.annotation.BeforeTestExecution;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -32,18 +33,17 @@ class WeatherDataServiceJdbcImplTest {
 
     @Test
     void save() throws ParseException {
-        WeatherRecord weatherRecord = new WeatherRecord("Krasnoyrask", (float) 7, new Date());
+        WeatherRecord weatherRecord = new WeatherRecord("Krasnoyrask", (float) 7, LocalDate.now());
         assertTrue(weatherDataService.save(weatherRecord) > 0);
 
-        SimpleDateFormat formatter =new SimpleDateFormat("yyyy-MM-dd");
-        assertTrue(weatherDataService.save(new WeatherRecord("Moskva", (float) 5, formatter.parse("2019-05-01"))) > 0);
-        assertTrue(weatherDataService.save(new WeatherRecord("Moskva", (float) 8, formatter.parse("2019-06-01"))) > 0);
-        assertTrue(weatherDataService.save(new WeatherRecord("Moskva", (float) -5, formatter.parse("2019-07-01"))) > 0);
-        assertTrue(weatherDataService.save(new WeatherRecord("Moskva", (float) 15, formatter.parse("2019-07-02"))) > 0);
-        assertTrue(weatherDataService.save(new WeatherRecord("Moskva", (float) 18, formatter.parse("2019-05-05"))) > 0);
-        assertTrue(weatherDataService.save(new WeatherRecord("Moskva", (float) -3, formatter.parse("2019-06-20"))) > 0);
-        assertTrue(weatherDataService.save(new WeatherRecord("Moskva", (float) 13, formatter.parse("2019-07-24"))) > 0);
-        assertTrue(weatherDataService.save(new WeatherRecord("Omsk", (float) 2, formatter.parse("2019-06-01"))) > 0);
+        assertTrue(weatherDataService.save(new WeatherRecord("Moskva", (float) 5, LocalDate.parse("2019-05-01"))) > 0);
+        assertTrue(weatherDataService.save(new WeatherRecord("Moskva", (float) 8, LocalDate.parse("2019-06-01"))) > 0);
+        assertTrue(weatherDataService.save(new WeatherRecord("Moskva", (float) -5, LocalDate.parse("2019-07-01"))) > 0);
+        assertTrue(weatherDataService.save(new WeatherRecord("Moskva", (float) 15, LocalDate.parse("2019-07-02"))) > 0);
+        assertTrue(weatherDataService.save(new WeatherRecord("Moskva", (float) 18, LocalDate.parse("2019-05-05"))) > 0);
+        assertTrue(weatherDataService.save(new WeatherRecord("Moskva", (float) -3, LocalDate.parse("2019-06-20"))) > 0);
+        assertTrue(weatherDataService.save(new WeatherRecord("Moskva", (float) 13, LocalDate.parse("2019-07-24"))) > 0);
+        assertTrue(weatherDataService.save(new WeatherRecord("Omsk", (float) 2, LocalDate.parse("2019-06-01"))) > 0);
     }
 
     @Test
