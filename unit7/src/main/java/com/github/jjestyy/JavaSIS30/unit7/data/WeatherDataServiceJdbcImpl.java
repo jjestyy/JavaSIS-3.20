@@ -31,6 +31,19 @@ public class WeatherDataServiceJdbcImpl implements WeatherDataService {
     }
     @Override
     public List<WeatherRecord> findWithConditions(String city, String periodStart, String periodEnd) {
+        String sql = getSQLString(city, periodStart, periodEnd);
+        return jdbcTemplate.query(sql,
+                (rs, rowNum) -> {
+                    return new WeatherRecord(
+                            rs.getString("city"),
+                            rs.getFloat("temp"),
+                            LocalDate.parse(
+                                    rs.getString("year") + "-" + rs.getString("month") + "-01",
+                                    DateTimeFormatter.ofPattern("yyyy-M-d")));
+                });
+    }
+
+    private String getSQLString(String city, String periodStart, String periodEnd) {
         String sql = "SELECT " +
                 "YEAR(date) as year, MONTH(date) as month, city, AVG(temp) as temp " +
                 "FROM WEATHER ";
@@ -59,22 +72,9 @@ public class WeatherDataServiceJdbcImpl implements WeatherDataService {
             sql+= " WHERE ";
             sql+= String.join(" AND ", conditions);
         }
-        sql +="GROUP BY MONTH(date), YEAR(date), city "+
-        "ORDER BY MONTH(date), YEAR(date), city ";
-        DateTimeFormatter formatterOnlyYearAndMonth = DateTimeFormatter.ofPattern("yyyy-M-d");
-        return jdbcTemplate.query(sql,
-                (rs, rowNum) ->
-                {
-                    try {
-                        return new WeatherRecord(
-                                rs.getString("city"),
-                                rs.getFloat("temp"),
-                                LocalDate.parse(rs.getString("year") + "-" + rs.getString("month") + "-01", formatterOnlyYearAndMonth));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                });
+        sql +=" GROUP BY MONTH(date), YEAR(date), city "+
+        " ORDER BY MONTH(date), YEAR(date), city ";
+        return sql;
     }
 
     @Override
