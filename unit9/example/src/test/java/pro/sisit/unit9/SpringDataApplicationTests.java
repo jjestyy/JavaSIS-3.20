@@ -5,13 +5,20 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 import pro.sisit.unit9.data.AuthorOfBookRepository;
 import pro.sisit.unit9.data.AuthorRepository;
 import pro.sisit.unit9.data.BookRepository;
+import pro.sisit.unit9.data.BookSpecifications;
 import pro.sisit.unit9.entity.Author;
 import pro.sisit.unit9.entity.AuthorOfBook;
 import pro.sisit.unit9.entity.Book;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -87,56 +94,56 @@ public class SpringDataApplicationTests {
 
 	@Test
 	public void testSave() {
-//		boolean founded = false;
-//		for (Book iteratedBook : bookRepository.findAll()) {
-//			if (iteratedBook.getTitle().equals("Буратино")
-//					&& iteratedBook.getId() > 0) {
-//				founded = true;
-//				break;
-//			}
-//		}
-//		assertTrue(founded);
+		boolean founded = false;
+		for (Book iteratedBook : bookRepository.findAll()) {
+			if (iteratedBook.getTitle().equals("Буратино")
+					&& iteratedBook.getId() > 0) {
+				founded = true;
+				break;
+			}
+		}
+		assertTrue(founded);
 	}
 
 	@Test
 	public void testFindByYear() {
-//		assertEquals(2, bookRepository.findByYear(1876).size());
-//		assertEquals(1, bookRepository.findByYear(1884).size());
-//		assertEquals(0, bookRepository.findByYear(2000).size());
+		assertEquals(2, bookRepository.findByYear(1876).size());
+		assertEquals(1, bookRepository.findByYear(1884).size());
+		assertEquals(0, bookRepository.findByYear(2000).size());
 	}
 
 	@Test
 	public void testFindAtPage() {
-//		PageRequest pageRequest = PageRequest.of(1, 1, Sort.Direction.ASC, "title");
-//		assertTrue(bookRepository.findAll(pageRequest)
-//				.get().allMatch(book -> book.getTitle().equals("Михаил Строгов")));
+		PageRequest pageRequest = PageRequest.of(1, 1, Sort.Direction.ASC, "title");
+		assertTrue(bookRepository.findAll(pageRequest)
+				.get().allMatch(book -> book.getTitle().equals("Михаил Строгов")));
 	}
 
 	@Test
 	public void testFindSame() {
-//		Book book = new Book();
-//		book.setYear(1876);
-//
-//		assertEquals(2, bookRepository.findAll(Example.of(book)).size());
+		Book book = new Book();
+		book.setYear(1876);
+
+		assertEquals(2, bookRepository.findAll(Example.of(book)).size());
 	}
 
 	@Test
 	public void testFindInRange() {
-//		assertEquals(3, bookRepository.findAll(
-//				BookSpecifications.byYearRange(1800, 1900)).size());
-//		assertEquals(0, bookRepository.findAll(
-//				BookSpecifications.byYearRange(2000, 2010)).size());
+		assertEquals(3, bookRepository.findAll(
+				BookSpecifications.byYearRange(1800, 1900)).size());
+		assertEquals(0, bookRepository.findAll(
+				BookSpecifications.byYearRange(2000, 2010)).size());
 	}
 
 	@Test
 	public void testFindByAuthorLastname() {
-//		assertTrue(bookRepository.findByAuthor("Верн")
-//				.stream().allMatch(book -> book.getTitle().equals("Михаил Строгов")));
+		assertTrue(bookRepository.findByAuthor("Верн")
+				.stream().allMatch(book -> book.getTitle().equals("Михаил Строгов")));
 	}
 
 	@Test
 	public void testComplexQueryMethod() {
-//		assertEquals(4, bookRepository.complexQueryMethod().size());
+		assertEquals(4, bookRepository.complexQueryMethod().size());
 	}
 
 }
