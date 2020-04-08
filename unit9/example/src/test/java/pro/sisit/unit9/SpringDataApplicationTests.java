@@ -1,5 +1,6 @@
 package pro.sisit.unit9;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -92,17 +93,12 @@ public class SpringDataApplicationTests {
 		authorOfBookRepository.save(authorOfBook4);
 	}
 
-	@Test
-	public void testSave() {
-		boolean founded = false;
-		for (Book iteratedBook : bookRepository.findAll()) {
-			if (iteratedBook.getTitle().equals("Буратино")
-					&& iteratedBook.getId() > 0) {
-				founded = true;
-				break;
-			}
-		}
-		assertTrue(founded);
+
+	@After
+	public void clear() {
+		authorOfBookRepository.deleteAll();
+		authorRepository.deleteAll();
+		bookRepository.deleteAll();
 	}
 
 	@Test
@@ -144,6 +140,19 @@ public class SpringDataApplicationTests {
 	@Test
 	public void testComplexQueryMethod() {
 		assertEquals(4, bookRepository.complexQueryMethod().size());
+	}
+
+	@Test
+	public void testSave() {
+		boolean founded = false;
+		for (Book iteratedBook : bookRepository.findAll()) {
+			if (iteratedBook.getTitle().equals("Буратино")
+					&& iteratedBook.getId() > 0) {
+				founded = true;
+				break;
+			}
+		}
+		assertTrue(founded);
 	}
 
 }
