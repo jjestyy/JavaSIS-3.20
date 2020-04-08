@@ -10,13 +10,15 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
-import pro.sisit.unit9.data.AuthorOfBookRepository;
-import pro.sisit.unit9.data.AuthorRepository;
-import pro.sisit.unit9.data.BookRepository;
-import pro.sisit.unit9.data.BookSpecifications;
+import pro.sisit.unit9.data.*;
 import pro.sisit.unit9.entity.Author;
 import pro.sisit.unit9.entity.AuthorOfBook;
 import pro.sisit.unit9.entity.Book;
+import pro.sisit.unit9.entity.Customer;
+import pro.sisit.unit9.service.SellingBookService;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -34,8 +36,44 @@ public class SpringDataApplicationTests {
 	@Autowired
 	private AuthorOfBookRepository authorOfBookRepository;
 
+	@Autowired
+	private SellingBookService sellingBookService;
+
+	@Autowired
+	private CustomerRepository customerRepository;
+
+	@Autowired
+	private PurchasedBookRepository purchasedBookRepository;
+
+
 	@Before
 	public void init() {
+		booksInit();
+		sellingInit();
+	}
+
+	@After
+	public void clear() {
+		authorOfBookRepository.deleteAll();
+		purchasedBookRepository.deleteAll();
+		authorRepository.deleteAll();
+		bookRepository.deleteAll();
+		customerRepository.deleteAll();
+	}
+
+	private void sellingInit() {
+		Customer customer1 = new Customer();
+		customer1.setName("Иван Петрович");
+		customer1.setAddress("2 ая продольная 47");
+		customerRepository.save(customer1);
+
+		Customer customer2 = new Customer();
+		customer2.setName("Ирина Луговая");
+		customer2.setAddress("Алексеева 115 кв 61");
+		customerRepository.save(customer2);
+	}
+
+	private void booksInit() {
 		Book book = new Book();
 		book.setDescription("Увлекательные приключения Тома Сойера");
 		book.setTitle("Приключения Тома Сойера");
@@ -94,12 +132,6 @@ public class SpringDataApplicationTests {
 	}
 
 
-	@After
-	public void clear() {
-		authorOfBookRepository.deleteAll();
-		authorRepository.deleteAll();
-		bookRepository.deleteAll();
-	}
 
 	@Test
 	public void testFindByYear() {
@@ -154,5 +186,30 @@ public class SpringDataApplicationTests {
 		}
 		assertTrue(founded);
 	}
+
+	@Test
+	public void sellingBookServiceTest() {
+		Book book = bookRepository.findAll().get(0);
+		Book book1 = bookRepository.findAll().get(1);
+		Book book2 = bookRepository.findAll().get(2);
+		Book book3 = bookRepository.findAll().get(3);
+		Customer customer = ((ArrayList<Customer>) customerRepository.findAll()).get(0);
+		Customer customer1 = ((ArrayList<Customer>) customerRepository.findAll()).get(1);
+
+		sellingBookService.sellBook(customer, book, BigDecimal.valueOf(150));
+		assertEquals(purchasedBookRepository.findByBookAndCustomer(book, customer).size(), 1);
+		
+		sellingBookService.sellBook(customer, book1, BigDecimal.valueOf(300));
+		sellingBookService.sellBook(customer, book2, BigDecimal.valueOf(100));
+		sellingBookService.sellBook(customer, book3, BigDecimal.valueOf(500));
+		sellingBookService.sellBook(customer1, book3, BigDecimal.valueOf(500));
+
+
+		assertEquals(sellingBookService.calculateCostForBook(book3).compareTo(BigDecimal.valueOf(1000)), 0);
+		assertEquals(sellingBookService.calculateCostForBook(book1).compareTo(BigDecimal.valueOf(300)), 0);
+		assertEquals(sellingBookService.calculateCostForCustomer(customer).compareTo(BigDecimal.valueOf(1050)), 0);
+		assertEquals(sellingBookService.calculateCostForCustomer(customer1).compareTo(BigDecimal.valueOf(500)), 0);
+	}
+
 
 }
