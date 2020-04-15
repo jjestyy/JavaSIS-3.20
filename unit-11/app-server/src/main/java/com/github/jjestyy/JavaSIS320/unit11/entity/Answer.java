@@ -12,6 +12,9 @@ public class Answer extends EntityWithLongId {
     @Column
     String name;
 
+    @Column
+    Boolean isCorrect;
+
     @JoinColumn(name = "question_id")
     @ManyToOne(fetch = FetchType.LAZY)
     Question question;
