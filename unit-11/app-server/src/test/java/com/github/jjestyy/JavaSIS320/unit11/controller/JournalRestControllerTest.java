@@ -1,65 +1,80 @@
 package com.github.jjestyy.JavaSIS320.unit11.controller;
 
-import com.github.jjestyy.JavaSIS320.unit11.data.JournalRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.jjestyy.JavaSIS320.unit11.dto.JournalEntityDTO;
 import com.github.jjestyy.JavaSIS320.unit11.entity.Journal;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import com.github.jjestyy.JavaSIS320.unit11.service.JournalService;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import javax.transaction.Transactional;
 import java.util.stream.Stream;
 
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.boot.test.context.SpringBootTest.*;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@ExtendWith(SpringExtension.class)
+@WebMvcTest(JournalRestController.class)
 class JournalRestControllerTest {
-    @LocalServerPort
-    private int port;
-
     @Autowired
-    private TestRestTemplate restTemplate;
+    private MockMvc mockMvc;
 
-    @Autowired
-    private JournalRepository journalRepository;
+    @MockBean
+    JournalService journalService;
 
-    private static Journal journal = new Journal();
+    ObjectMapper mapper = new ObjectMapper();
 
-    @BeforeEach
-    private void prepareDB() {
-        journal.setId("testquestions");
-        journal.setName("testQuestions");
-        journal.setDefaultPageSize(15L);
-        journalRepository.save(journal);
-    }
-
-    @AfterEach
-    private void clearDB() {
-        journalRepository.delete(journal);
-    }
 
     @ParameterizedTest
-    @MethodSource("createUrlsAndStatuses")
-    void getJournalEntity(String url, HttpStatus status) {
-        // no such entity
-        ResponseEntity<String> response = restTemplate.getForEntity("http://localhost:" + port + url, String.class);
-        assertEquals(response.getStatusCode(), status);
+    @MethodSource("dataForGetJournalEntity")
+    void getJournalEntity(String url, HttpStatus status) throws Exception {
+
+        Journal journal = new Journal();
+        journal.setId("testquestions");
+        journal.setName("testquestions");
+        journal.setDefaultPageSize(15L);
+
+        when(journalService.getJournal(any(String.class))).thenReturn(null);
+        when(journalService.getJournal("testquestions")).thenReturn(journal);
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .accept(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        assertEquals(status.value(), result.getResponse().getStatus());
+        if(status == HttpStatus.OK) {
+            assertEquals(result.getResponse().getContentAsString(),
+                    mapper.writeValueAsString(new JournalEntityDTO(journal)));
+        }
+        if(status != HttpStatus.NOT_FOUND) {
+            verify(journalService).getJournal(any(String.class));
+        }
     }
 
-    private static Stream<Arguments> createUrlsAndStatuses() {
+    private static Stream<Arguments> dataForGetJournalEntity() {
         return Stream.of(
                 Arguments.of("/api/journal/questions11", HttpStatus.NO_CONTENT),
                 Arguments.of("/api/journal/questions/some/absurd", HttpStatus.NOT_FOUND),
                 Arguments.of("/api/journal/testquestions", HttpStatus.OK));
     }
 
+    @Test
+    void getRows() {
+
+    }
 }

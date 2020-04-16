@@ -8,6 +8,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class JournalServiceImplTest {
 
+
+
     @BeforeEach
     void setUp() {
     }
