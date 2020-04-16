@@ -3,8 +3,10 @@ package com.github.jjestyy.JavaSIS320.unit11.dto;
 import com.github.jjestyy.JavaSIS320.unit11.entity.Answer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 @Data
+@RequiredArgsConstructor
 public class AnswerItemDTO {
     private String id;
     private String answerText;
