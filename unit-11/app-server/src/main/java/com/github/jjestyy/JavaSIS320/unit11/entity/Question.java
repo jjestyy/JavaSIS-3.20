@@ -12,4 +12,12 @@ import javax.persistence.Entity;
 public class Question extends EntityWithLongId{
     @Column
     private String name;
+
+    @Override
+    public String toString() {
+        return "Question{" +
+                "name='" + name + '\'' +
+                "id='" + this.getId() + '\'' +
+                '}';
+    }
 }
