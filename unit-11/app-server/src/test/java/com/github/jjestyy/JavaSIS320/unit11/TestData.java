@@ -98,32 +98,19 @@ public class TestData {
     }
 
     public static List<QuestionsItemDto> getQuestionsItemDtos() {
-        AnswerItemDTO answerItemDTO = new AnswerItemDTO();
-        AnswerItemDTO answerItemDTO1 = new AnswerItemDTO();
-        AnswerItemDTO answerItemDTO2 = new AnswerItemDTO();
-        AnswerItemDTO answerItemDTO3 = new AnswerItemDTO();
-        answerItemDTO.setId("3");
-        answerItemDTO.setAnswerText("Ответ 3");
-        answerItemDTO.setIsCorrect(false);
-        answerItemDTO1.setId("4");
-        answerItemDTO1.setAnswerText("Ответ 2");
-        answerItemDTO1.setIsCorrect(true);
-        answerItemDTO2.setId("4");
-        answerItemDTO2.setAnswerText("Ответ 2");
-        answerItemDTO2.setIsCorrect(true);
-        answerItemDTO3.setId("4");
-        answerItemDTO3.setAnswerText("Ответ 2");
-        answerItemDTO3.setIsCorrect(true);
-
-        QuestionsItemDto questionsItemDto = new QuestionsItemDto();
-        questionsItemDto.setId("1");
-        questionsItemDto.setName("Вопрос 1");
-        questionsItemDto.setAnswers(List.of(answerItemDTO, answerItemDTO1));
-        QuestionsItemDto questionsItemDto1 = new QuestionsItemDto();
-        questionsItemDto1.setId("2");
-        questionsItemDto1.setName("Вопрос 2");
-        questionsItemDto1.setAnswers(List.of(answerItemDTO2, answerItemDTO3));
-
-        return List.of(questionsItemDto, questionsItemDto1);
+        List<Question> questions = getTestQuestionsList();
+        List<Answer> answers = getTestAnswersList(questions);
+        for (int i = 0; i< questions.size(); i++ ) {
+            questions.get(i).setId((long) i+1);
+        }
+        for (int i = 0; i< answers.size(); i++ ) {
+            answers.get(i).setId((long) i+1);
+        }
+        return List.of(
+                new QuestionsItemDto(questions.get(0), answers.subList(0,3)),
+                new QuestionsItemDto(questions.get(1), answers.subList(2,4)),
+                new QuestionsItemDto(questions.get(2), answers.subList(5,8)),
+                new QuestionsItemDto(questions.get(3), answers.subList(8,9))
+        );
     }
 }
