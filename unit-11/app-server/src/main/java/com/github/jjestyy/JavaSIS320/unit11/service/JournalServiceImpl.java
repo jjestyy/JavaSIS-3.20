@@ -31,11 +31,9 @@ public class JournalServiceImpl implements JournalService {
     public List<? extends JournalItemDTO> getJournalRows(String id, JournalRowsRequestDTO req) {
         switch (id) {
             case QUESTIONS_JOURNAL_ID:
-                questionService.getQuestions(req);
-                break;
+                return questionService.getQuestions(req);
             default:
                 throw new RuntimeException();
         }
-        return null;
     }
 }
