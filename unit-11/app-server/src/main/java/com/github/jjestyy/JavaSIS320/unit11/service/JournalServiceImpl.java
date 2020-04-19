@@ -7,6 +7,7 @@ import com.github.jjestyy.JavaSIS320.unit11.entity.Journal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.function.Function;
 
@@ -25,6 +26,17 @@ public class JournalServiceImpl implements JournalService {
     public Journal getJournal(String id) {
         return journalRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException(String.format("Cannot find journal with id %s", id)));
+    }
+
+    @PostConstruct
+    private void initData() {
+        if(!journalRepository.existsById(JournalServiceImpl.QUESTIONS_JOURNAL_ID)) {
+            Journal journal = new Journal();
+            journal.setId(JournalServiceImpl.QUESTIONS_JOURNAL_ID);
+            journal.setName("Вопросы");
+            journal.setDefaultPageSize(15L);
+            journalRepository.save(journal);
+        }
     }
 
     @Override
