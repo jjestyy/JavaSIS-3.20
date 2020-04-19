@@ -13,11 +13,11 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @RequiredArgsConstructor
-public class QuestionsItemDto extends JournalItemDTO {
+public class QuestionsItemDTO extends JournalItemDTO {
     private String name;
     private List<AnswerItemDTO> answers;
 
-    public QuestionsItemDto(Question question, List<Answer> answers) {
+    public QuestionsItemDTO(Question question, List<Answer> answers) {
         this.id = question.getId().toString();
         this.name = question.getName();
         this.answers = answers.stream().map(AnswerItemDTO::new).collect(Collectors.toList());

@@ -75,13 +75,13 @@ public class TestData {
         }
         if(isPage) {
             journalRowsRequestDTO.setPageSize(2);
-            journalRowsRequestDTO.setPage(1);
+            journalRowsRequestDTO.setPage(2);
         } else {
             journalRowsRequestDTO.setPageSize(15);
-            journalRowsRequestDTO.setPage(0);
+            journalRowsRequestDTO.setPage(1);
         }
         if(isFilter) {
-            FilterDto filterDto = new FilterDto();
+            FilterDTO filterDto = new FilterDTO();
             filterDto.setCode("question-answer-count");
             filterDto.setType("single-select");
             filterDto.setValue("2");
@@ -93,11 +93,11 @@ public class TestData {
     }
 
     public static JournalRowsResultDTO getJournalRowsResultDTO() {
-        List<QuestionsItemDto> questionsItemDtoList = getQuestionsItemDtos();
+        List<QuestionsItemDTO> questionsItemDtoList = getQuestionsItemDtos();
         return  new JournalRowsResultDTO(questionsItemDtoList.size(), questionsItemDtoList);
     }
 
-    public static List<QuestionsItemDto> getQuestionsItemDtos() {
+    public static List<QuestionsItemDTO> getQuestionsItemDtos() {
         List<Question> questions = getTestQuestionsList();
         List<Answer> answers = getTestAnswersList(questions);
         for (int i = 0; i< questions.size(); i++ ) {
@@ -107,10 +107,10 @@ public class TestData {
             answers.get(i).setId((long) i+1);
         }
         return List.of(
-                new QuestionsItemDto(questions.get(0), answers.subList(0,3)),
-                new QuestionsItemDto(questions.get(1), answers.subList(2,4)),
-                new QuestionsItemDto(questions.get(2), answers.subList(5,8)),
-                new QuestionsItemDto(questions.get(3), answers.subList(8,9))
+                new QuestionsItemDTO(questions.get(0), answers.subList(0,3)),
+                new QuestionsItemDTO(questions.get(1), answers.subList(2,4)),
+                new QuestionsItemDTO(questions.get(2), answers.subList(5,8)),
+                new QuestionsItemDTO(questions.get(3), answers.subList(8,9))
         );
     }
 }

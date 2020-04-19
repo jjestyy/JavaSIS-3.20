@@ -54,10 +54,9 @@ class QuestionRepositoryTest {
     @ParameterizedTest
     @MethodSource("createRequestsAndResults")
     void findByNameContainingIgnoreCase(JournalRowsRequestDTO req, List<Question> expectedResult) {
-        PageRequest pageRequest = PageRequest.of(req.getPage(), req.getPageSize(), Sort.by(Sort.Direction.ASC, "id"));
+        PageRequest pageRequest = PageRequest.of(req.getPage()-1, req.getPageSize(), Sort.by(Sort.Direction.ASC, "id"));
         List<Question> actualResult = questionRepository.findByNameContainingIgnoreCase(req.getSearch(), pageRequest);
         for (int i = 0; i< expectedResult.size(); i++ ) {
-            System.out.println(expectedResult.get(i).getName());
             assertEquals(expectedResult.get(i).getName(), actualResult.get(i).getName());
         }
     }
@@ -71,7 +70,9 @@ class QuestionRepositoryTest {
                         TestData.getJournalRowsRequestDTO(true, true, false),
                         List.of(TestData.getTestQuestionsList().get(2))),
                 Arguments.of(TestData.getJournalRowsRequestDTO(true, false, false),
-                        TestData.getTestQuestionsList().subList(2,3)
+                        TestData.getTestQuestionsList().subList(2,3)),
+                Arguments.of(TestData.getJournalRowsRequestDTO(false, false, false),
+                        TestData.getTestQuestionsList()
                 ));
     }
 }

@@ -9,5 +9,5 @@ public class JournalRowsRequestDTO {
     private String search;
     private int page;
     private int pageSize;
-    List<FilterDto> filters;
+    List<FilterDTO> filters;
 }

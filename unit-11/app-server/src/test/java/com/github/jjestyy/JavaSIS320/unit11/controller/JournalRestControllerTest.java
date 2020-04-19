@@ -68,7 +68,7 @@ class JournalRestControllerTest {
         if(status != HttpStatus.NOT_FOUND) {
             verify(journalService).getJournal(any(String.class));
         }
-    }
+}
 
     private static Stream<Arguments> dataForGetJournalEntity() {
         return Stream.of(
