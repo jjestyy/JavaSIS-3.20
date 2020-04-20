@@ -106,9 +106,13 @@ public class TestData {
         for (int i = 0; i< answers.size(); i++ ) {
             answers.get(i).setId((long) i+1);
         }
+      return getQuestionsItemDtosFromQuestionsAndAnswers(questions, answers);
+    }
+
+    public static List<QuestionsItemDTO> getQuestionsItemDtosFromQuestionsAndAnswers(List<Question> questions, List<Answer> answers) {
         return List.of(
                 new QuestionsItemDTO(questions.get(0), answers.subList(0,3)),
-                new QuestionsItemDTO(questions.get(1), answers.subList(2,4)),
+                new QuestionsItemDTO(questions.get(1), answers.subList(3,5)),
                 new QuestionsItemDTO(questions.get(2), answers.subList(5,8)),
                 new QuestionsItemDTO(questions.get(3), answers.subList(8,9))
         );

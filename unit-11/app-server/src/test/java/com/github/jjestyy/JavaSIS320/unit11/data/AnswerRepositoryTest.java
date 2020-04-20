@@ -26,6 +26,7 @@ class AnswerRepositoryTest {
 
     List<Question> questionList = TestData.getTestQuestionsList();
     List<Answer> answerList = TestData.getTestAnswersList(questionList);
+
     @BeforeEach
     void setUp() {
         for(Question question: questionList) {
@@ -38,6 +39,7 @@ class AnswerRepositoryTest {
             entityManager.flush();
         }
     }
+
     @Test
     void findByQuestion() {
         List<Answer> expectedResult = answerList.subList(0, 2);
