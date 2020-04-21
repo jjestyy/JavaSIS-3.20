@@ -16,7 +16,7 @@ public class Session extends EntityWithLongId {
     private String fio;
 
     @Column
-    private Double percent;
+    private Double points;
 
     @Column
     private LocalDate insertDate;
