@@ -6,7 +6,6 @@ import com.github.jjestyy.JavaSIS320.unit11.data.SelectedAnswerRepository;
 import com.github.jjestyy.JavaSIS320.unit11.data.SessionRepository;
 import com.github.jjestyy.JavaSIS320.unit11.dto.*;
 import com.github.jjestyy.JavaSIS320.unit11.entity.Answer;
-import com.github.jjestyy.JavaSIS320.unit11.entity.Question;
 import com.github.jjestyy.JavaSIS320.unit11.entity.SelectedAnswer;
 import com.github.jjestyy.JavaSIS320.unit11.entity.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +32,6 @@ public class SessionServiceImpl implements SessionService {
     @Autowired
     private SelectedAnswerRepository selectedAnswerRepository;
 
-    private List<QuestionResult> questionsResultList;
-
     @Override
     public List<QuestionsItemDTO> getRandomQuestionsList(int size) {
         List<QuestionsItemDTO> questionsItemDTOList = new ArrayList<>();
@@ -56,53 +53,61 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public void addSession(SessionDTO dto) {
+    public double addSession(SessionDTO dto) {
+        Double points = calculatePoints(dto.getQuestionsList());
         Session session = new Session();
         session.setFio(dto.getName());
-        session.setPoints(calculatePoints(dto.getAnswers()));
+        session.setPoints(points);
         session.setInsertDate(LocalDate.now());
         sessionRepository.save(session);
-        dto.getAnswers().forEach(selectedAnswerDTO -> createAnswer(selectedAnswerDTO, session));
+        dto.getQuestionsList()
+                .forEach(answeredQuestionDTO ->
+                        answeredQuestionDTO.getAnswersList()
+                                .forEach(sessionQuestionAnswerDTO ->
+                                        createAnswer(sessionQuestionAnswerDTO, session)));
+        return points;
     }
 
-    private void createAnswer(SelectedAnswerDTO selectedAnswerDTO, Session session) {
+    private void createAnswer(SessionQuestionAnswerDTO dto, Session session) {
         SelectedAnswer selectedAnswer = new SelectedAnswer();
-        selectedAnswer.setAnswer(getAnswerByDTO(selectedAnswerDTO));
+        selectedAnswer.setAnswer(getAnswerByDTO(dto));
         selectedAnswer.setSession(session);
         selectedAnswerRepository.save(selectedAnswer);
     }
 
-    private Answer getAnswerByDTO(SelectedAnswerDTO dto) {
+    private Answer getAnswerByDTO(SessionQuestionAnswerDTO dto) {
         return answerRepository.findById(Long.parseLong(dto.getId()))
                 .orElseThrow(() -> new RuntimeException(String.format("there is no answer with such id - %s", dto.getId())));
     }
 
-    private void addQuestionResult(Answer answer, SelectedAnswerDTO selectedAnswerDTO) {
-        Boolean isRight = answer.getIsCorrect() && selectedAnswerDTO.getIsSelected();
-        Question question = answer.getQuestion();
-        Optional<QuestionResult> questionResultRowOptional = questionsResultList
-                .stream()
-                .filter(questionResult -> questionResult.getQuestion().equals(question))
-                .findFirst();
-        QuestionResult questionResult;
-        if(questionResultRowOptional.isPresent()) {
-            questionResult = questionResultRowOptional.get();
-        } else {
-            List<Answer> answers = answerRepository.findByQuestion(question);
-            questionResult = new QuestionResult(question, answers.size(), (int) answers.stream().filter(Answer::getIsCorrect).count());
-            questionsResultList.add(questionResult);
+    private Double calculatePoints(List<AnsweredQuestionDTO> questions) {
+        double resultPoints = (double) 0;
+        for (AnsweredQuestionDTO answeredQuestionDTO : questions) {
+            int countOfAllAnswers = answeredQuestionDTO.getAnswersList().size();
+            int countOfCorrectAnswers = 0;
+            int countOfAllCorrectAnswers = 0;
+            int countOfWrongAnswers = 0;
+            Iterator<SessionQuestionAnswerDTO> iterator = answeredQuestionDTO.getAnswersList().iterator();
+            while (iterator.hasNext()){
+                SessionQuestionAnswerDTO sessionQuestionAnswerDTO = iterator.next();
+                Answer answer = getAnswerByDTO(sessionQuestionAnswerDTO);
+                if(answer.getIsCorrect()) {
+                    countOfAllCorrectAnswers++;
+                    if(sessionQuestionAnswerDTO.getIsSelected()){
+                        countOfCorrectAnswers++;
+                    }
+                } else {
+                    if(sessionQuestionAnswerDTO.getIsSelected()){
+                        countOfWrongAnswers++;
+                    }
+                }
+                if(!iterator.hasNext()) {
+                    resultPoints += (double) countOfCorrectAnswers / countOfAllAnswers -
+                        (double) countOfWrongAnswers / (countOfAllCorrectAnswers - countOfAllAnswers);
+                }
+            }
         }
-        questionResult.addAnswer(isRight);
-    }
-
-    private Double calculatePoints(List<SelectedAnswerDTO> answers) {
-        answers.forEach(selectedAnswerDTO -> addQuestionResult(getAnswerByDTO(selectedAnswerDTO), selectedAnswerDTO));
-        return questionsResultList
-                .stream()
-                .map((q) -> Math.max(0, (double) q.getCountOfCorrectAnswers() / q.getCountOfAllAnswers() -
-                        (double) q.getCountOfWrongAnswers() / (q.getCountOfAllCorrectAnswers() - q.getCountOfAllAnswers())))
-                .mapToDouble(Double::doubleValue).sum();
-
+        return resultPoints / questions.size() * 100;
     }
 
 }

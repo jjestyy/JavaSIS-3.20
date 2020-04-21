@@ -23,9 +23,9 @@ public class SessionRestController {
         return sessionService.getRandomQuestionsList(DEFAULT_SESSION_SIZE);
     }
 
-    @PostMapping
-    public void postSession(@RequestBody SessionDTO dto) {
-        sessionService.addSession(dto);
+    @PostMapping()
+    public String postSession(@RequestBody SessionDTO dto) {
+        return String.valueOf(sessionService.addSession(dto));
     }
 
 }

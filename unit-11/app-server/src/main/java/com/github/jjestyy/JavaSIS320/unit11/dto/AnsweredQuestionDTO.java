@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @RequiredArgsConstructor
-public class SessionDTO {
-    private String name;
-    private List<AnsweredQuestionDTO> questionsList;
+public class AnsweredQuestionDTO {
+    private String id;
+    private List<SessionQuestionAnswerDTO> answersList;
 }

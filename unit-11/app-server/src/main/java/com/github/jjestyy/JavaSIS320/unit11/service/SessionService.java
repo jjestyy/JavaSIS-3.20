@@ -8,5 +8,5 @@ import java.util.List;
 public interface SessionService {
     List<QuestionsItemDTO> getRandomQuestionsList(int size);
 
-    void addSession(SessionDTO dto);
+    double addSession(SessionDTO dto);
 }

@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
-public class SelectedAnswerDTO {
+public class SessionQuestionAnswerDTO {
     private String id;
     private Boolean isSelected;
 }
