@@ -54,18 +54,29 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public double addSession(SessionDTO dto) {
-        Double points = calculatePoints(dto.getQuestionsList());
+        List<AnsweredQuestionDTO> questionsList = dto.getQuestionsList();
+        double points = 0;
+        List<SessionQuestionAnswerDTO> answersToSave = new ArrayList<>();
+        for(AnsweredQuestionDTO questionDTO: questionsList) {
+            points += getPoints(questionDTO);
+            questionDTO.getAnswersList()
+                    .stream()
+                    .filter(SessionQuestionAnswerDTO::getIsSelected)
+                    .forEach(answersToSave::add);
+        }
+        double percent = points / questionsList.size() * 100;
+        Session session = createSession(dto, percent);
+        answersToSave.forEach(sessionQuestionAnswerDTO -> createAnswer(sessionQuestionAnswerDTO, session));
+        return percent;
+    }
+
+    private Session createSession(SessionDTO dto, Double points) {
         Session session = new Session();
         session.setFio(dto.getName());
         session.setPoints(points);
         session.setInsertDate(LocalDate.now());
         sessionRepository.save(session);
-        dto.getQuestionsList()
-                .forEach(answeredQuestionDTO ->
-                        answeredQuestionDTO.getAnswersList()
-                                .forEach(sessionQuestionAnswerDTO ->
-                                        createAnswer(sessionQuestionAnswerDTO, session)));
-        return points;
+        return session;
     }
 
     private void createAnswer(SessionQuestionAnswerDTO dto, Session session) {
@@ -80,34 +91,29 @@ public class SessionServiceImpl implements SessionService {
                 .orElseThrow(() -> new RuntimeException(String.format("there is no answer with such id - %s", dto.getId())));
     }
 
-    private Double calculatePoints(List<AnsweredQuestionDTO> questions) {
-        double resultPoints = (double) 0;
-        for (AnsweredQuestionDTO answeredQuestionDTO : questions) {
-            int countOfAllAnswers = answeredQuestionDTO.getAnswersList().size();
-            int countOfCorrectAnswers = 0;
-            int countOfAllCorrectAnswers = 0;
-            int countOfWrongAnswers = 0;
-            Iterator<SessionQuestionAnswerDTO> iterator = answeredQuestionDTO.getAnswersList().iterator();
-            while (iterator.hasNext()){
-                SessionQuestionAnswerDTO sessionQuestionAnswerDTO = iterator.next();
-                Answer answer = getAnswerByDTO(sessionQuestionAnswerDTO);
-                if(answer.getIsCorrect()) {
-                    countOfAllCorrectAnswers++;
-                    if(sessionQuestionAnswerDTO.getIsSelected()){
-                        countOfCorrectAnswers++;
-                    }
-                } else {
-                    if(sessionQuestionAnswerDTO.getIsSelected()){
-                        countOfWrongAnswers++;
-                    }
-                }
-                if(!iterator.hasNext()) {
-                    resultPoints += (double) countOfCorrectAnswers / countOfAllAnswers -
-                        (double) countOfWrongAnswers / (countOfAllCorrectAnswers - countOfAllAnswers);
-                }
+    private Double getPoints(AnsweredQuestionDTO question) {
+        List<SessionQuestionAnswerDTO> sessionAnswers = question.getAnswersList();
+        int countOfCorrectAnswers = 0;
+        int countOfWrongAnswers = 0;
+        int countOfAllCorrectAnswers = 0;
+        int countOfAllAnswers = sessionAnswers.size();
+        for (SessionQuestionAnswerDTO answerDTO: sessionAnswers) {
+            Answer answer = getAnswerByDTO(answerDTO);
+            if(answer.getIsCorrect() && answerDTO.getIsSelected()) {
+                countOfAllCorrectAnswers++;
+                countOfCorrectAnswers++;
+            }
+            if(answer.getIsCorrect() && !answerDTO.getIsSelected()) {
+                countOfAllCorrectAnswers++;
+                countOfWrongAnswers++;
+            }
+            if(answerDTO.getIsSelected() && !answer.getIsCorrect()) {
+                countOfWrongAnswers++;
             }
         }
-        return resultPoints / questions.size() * 100;
+        return countOfAllCorrectAnswers != countOfAllAnswers ?
+                (double) countOfCorrectAnswers / countOfAllCorrectAnswers -
+                        (double) countOfWrongAnswers / (countOfAllAnswers - countOfAllCorrectAnswers) :
+                (double) countOfCorrectAnswers / countOfAllCorrectAnswers;
     }
-
 }
