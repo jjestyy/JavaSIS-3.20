@@ -1,34 +1,23 @@
 package com.github.jjestyy.JavaSIS320.unit11.service;
 
 import com.github.jjestyy.JavaSIS320.unit11.TestData;
+import com.github.jjestyy.JavaSIS320.unit11.Unit11TestConfiguration;
 import com.github.jjestyy.JavaSIS320.unit11.data.JournalRepository;
 import com.github.jjestyy.JavaSIS320.unit11.entity.Journal;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+@Import(Unit11TestConfiguration.class)
 @ExtendWith(SpringExtension.class)
+@DataJpaTest
 class JournalServiceImplTest {
-
-    @TestConfiguration
-    static class JournalServiceImplTestContextConfiguration {
-
-        @Bean
-        public JournalService journalService() {
-            return new JournalServiceImpl();
-        }
-    }
 
     @Autowired
     private JournalService journalService;
@@ -38,7 +27,6 @@ class JournalServiceImplTest {
 
     @MockBean
     private QuestionService questionService;
-
 
     @Test
     void getJournal() {

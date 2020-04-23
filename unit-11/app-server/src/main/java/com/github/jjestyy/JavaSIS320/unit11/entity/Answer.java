@@ -18,4 +18,13 @@ public class Answer extends EntityWithLongId {
     @JoinColumn(name = "question_id")
     @ManyToOne(fetch = FetchType.LAZY)
     Question question;
+
+    @Override
+    public String toString() {
+        return "Answer{" +
+                "id='" + this.getId() + ", " + "name='" + name + '\'' +
+                ", isCorrect=" + isCorrect +
+                ", question=" + question +
+                '}';
+    }
 }

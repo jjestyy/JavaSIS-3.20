@@ -91,12 +91,11 @@ public class SessionServiceImpl implements SessionService {
                 .orElseThrow(() -> new RuntimeException(String.format("there is no answer with such id - %s", dto.getId())));
     }
 
-    private Double getPoints(AnsweredQuestionDTO question) {
+    private double getPoints(AnsweredQuestionDTO question) {
         List<SessionQuestionAnswerDTO> sessionAnswers = question.getAnswersList();
         int countOfCorrectAnswers = 0;
         int countOfWrongAnswers = 0;
         int countOfAllCorrectAnswers = 0;
-        int countOfAllAnswers = sessionAnswers.size();
         for (SessionQuestionAnswerDTO answerDTO: sessionAnswers) {
             Answer answer = getAnswerByDTO(answerDTO);
             if(answer.getIsCorrect() && answerDTO.getIsSelected()) {
@@ -111,9 +110,21 @@ public class SessionServiceImpl implements SessionService {
                 countOfWrongAnswers++;
             }
         }
-        return countOfAllCorrectAnswers != countOfAllAnswers ?
-                (double) countOfCorrectAnswers / countOfAllCorrectAnswers -
-                        (double) countOfWrongAnswers / (countOfAllAnswers - countOfAllCorrectAnswers) :
-                (double) countOfCorrectAnswers / countOfAllCorrectAnswers;
+        return calculatePointResult(countOfCorrectAnswers, countOfWrongAnswers, countOfAllCorrectAnswers, sessionAnswers.size());
+    }
+
+    private double calculatePointResult(double countOfCorrectAnswers, int countOfWrongAnswers,
+                                        double countOfAllCorrectAnswers, int countOfAllAnswers) {
+        //no correct answers
+        if(countOfAllCorrectAnswers == 0) {
+            return countOfWrongAnswers == 0 ? 1 : 0;
+        }
+        //all answers are correct
+        if(countOfAllCorrectAnswers == countOfAllAnswers) {
+            return countOfCorrectAnswers / countOfAllCorrectAnswers;
+        }
+        //default
+        return Math.max(0, countOfCorrectAnswers / countOfAllCorrectAnswers -
+                        countOfWrongAnswers / (countOfAllAnswers - countOfAllCorrectAnswers));
     }
 }

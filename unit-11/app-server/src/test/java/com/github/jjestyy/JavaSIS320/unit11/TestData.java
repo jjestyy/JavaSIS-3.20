@@ -4,6 +4,7 @@ import com.github.jjestyy.JavaSIS320.unit11.dto.*;
 import com.github.jjestyy.JavaSIS320.unit11.entity.Answer;
 import com.github.jjestyy.JavaSIS320.unit11.entity.Question;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TestData {
@@ -116,5 +117,34 @@ public class TestData {
                 new QuestionsItemDTO(questions.get(2), answers.subList(5,8)),
                 new QuestionsItemDTO(questions.get(3), answers.subList(8,9))
         );
+    }
+
+    public static SessionDTO getSessionDTO(String name, List<Question> questions, List<Answer> answers, Boolean isSelected, Boolean isHalf){
+        SessionDTO dto = new SessionDTO();
+        dto.setName(name);
+        List<SessionQuestionAnswerDTO> answersList = new ArrayList<>();
+        answers.forEach(answer -> {
+                SessionQuestionAnswerDTO answerDTO = new SessionQuestionAnswerDTO();
+                answerDTO.setId(String.valueOf(answer.getId()));
+                answerDTO.setIsSelected(isSelected);
+                answersList.add(answerDTO);
+        });
+        if(isHalf) {
+            for(int i = 0; i < answersList.size(); i++) {
+                answersList.get(i).setIsSelected(i%2==0 ? isSelected : !isSelected);
+            }
+        }
+        List<AnsweredQuestionDTO> questionsList = new ArrayList<>();
+        questions.forEach(question -> {
+            AnsweredQuestionDTO qDTO = new AnsweredQuestionDTO();
+            qDTO.setId(String.valueOf(question.getId()));
+            questionsList.add(qDTO);
+        });
+        questionsList.get(0).setAnswersList(answersList.subList(0,3));
+        questionsList.get(1).setAnswersList(answersList.subList(3,5));
+        questionsList.get(2).setAnswersList(answersList.subList(5,8));
+        questionsList.get(3).setAnswersList(answersList.subList(8,9));
+        dto.setQuestionsList(questionsList);
+        return dto;
     }
 }
