@@ -33,9 +33,6 @@ public class JournalRestController {
     @PutMapping("{id}/rows")
     public JournalRowsResultDTO getRows(@PathVariable String id, @RequestBody JournalRowsRequestDTO req) {
         List<? extends JournalItemDTO> collect = journalService.getJournalRows(id, req);
-        if(collect.size() == 0) {
-            throw new RuntimeException(String.format("Нет записей для id %s", id));
-        }
         return new JournalRowsResultDTO(collect.size(), collect);
     }
 }
