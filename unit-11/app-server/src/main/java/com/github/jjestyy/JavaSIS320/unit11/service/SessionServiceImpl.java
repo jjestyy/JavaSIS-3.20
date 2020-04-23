@@ -9,6 +9,8 @@ import com.github.jjestyy.JavaSIS320.unit11.entity.Answer;
 import com.github.jjestyy.JavaSIS320.unit11.entity.SelectedAnswer;
 import com.github.jjestyy.JavaSIS320.unit11.entity.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -68,6 +70,15 @@ public class SessionServiceImpl implements SessionService {
         Session session = createSession(dto, percent);
         answersToSave.forEach(sessionQuestionAnswerDTO -> createAnswer(sessionQuestionAnswerDTO, session));
         return percent;
+    }
+
+    @Override
+    public List<SessionsItemDTO> getSessions(JournalRowsRequestDTO req) {
+        PageRequest pageRequest = PageRequest.of(req.getPage()-1, req.getPageSize(), Sort.by(Sort.Direction.ASC, "id"));
+        return sessionRepository.findByFioContainingIgnoreCase(req.getSearch(), pageRequest)
+                .stream()
+                .map(SessionsItemDTO::new)
+                .collect(Collectors.toList());
     }
 
     private Session createSession(SessionDTO dto, Double points) {

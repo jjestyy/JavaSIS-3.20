@@ -15,12 +15,16 @@ import java.util.function.Function;
 public class JournalServiceImpl implements JournalService {
 
     public static final String QUESTIONS_JOURNAL_ID = "questions";
+    public static final String SESSIONS_JOURNAL_ID = "sessions";
 
     @Autowired
     private JournalRepository journalRepository;
 
     @Autowired
     private QuestionService questionService;
+
+    @Autowired
+    private SessionService sessionService;
 
     @Override
     public Journal getJournal(String id) {
@@ -37,6 +41,13 @@ public class JournalServiceImpl implements JournalService {
             journal.setDefaultPageSize(15L);
             journalRepository.save(journal);
         }
+        if(!journalRepository.existsById(JournalServiceImpl.SESSIONS_JOURNAL_ID)) {
+            Journal journal = new Journal();
+            journal.setId(JournalServiceImpl.SESSIONS_JOURNAL_ID);
+            journal.setName("Сессии");
+            journal.setDefaultPageSize(15L);
+            journalRepository.save(journal);
+        }
     }
 
     @Override
@@ -44,6 +55,8 @@ public class JournalServiceImpl implements JournalService {
         switch (id) {
             case QUESTIONS_JOURNAL_ID:
                 return questionService.getQuestions(req);
+            case SESSIONS_JOURNAL_ID:
+                return sessionService.getSessions(req);
             default:
                 throw new RuntimeException();
         }
