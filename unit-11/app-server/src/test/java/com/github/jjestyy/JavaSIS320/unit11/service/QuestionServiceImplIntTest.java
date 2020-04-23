@@ -2,6 +2,7 @@ package com.github.jjestyy.JavaSIS320.unit11.service;
 
 import com.github.jjestyy.JavaSIS320.unit11.TestData;
 import com.github.jjestyy.JavaSIS320.unit11.Unit11TestConfiguration;
+import com.github.jjestyy.JavaSIS320.unit11.data.AnswerRepository;
 import com.github.jjestyy.JavaSIS320.unit11.data.QuestionRepository;
 import com.github.jjestyy.JavaSIS320.unit11.dto.QuestionsItemDTO;
 import com.github.jjestyy.JavaSIS320.unit11.entity.Answer;
@@ -29,15 +30,18 @@ class QuestionServiceImplIntTest {
     private QuestionService questionService;
     @Autowired
     private QuestionRepository questionRepository;
-
+    @Autowired
+    private AnswerRepository answerRepository;
     @Test
     void createQuestion() {
         long countBefore = questionRepository.count();
+        long countBeforeAnwers = answerRepository.count();
         QuestionsItemDTO dto = TestData.getQuestionsItemDtos().get(1);
         questionService.createQuestion(dto);
         Long countAfter = questionRepository.count();
+        Long countAfterAnwers = answerRepository.count();
         Assertions.assertEquals(countAfter, countBefore+1L);
-        //TODO check answers
+        Assertions.assertEquals(countAfterAnwers, countBeforeAnwers+2L);
     }
 
     @Test

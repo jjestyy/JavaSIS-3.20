@@ -83,7 +83,6 @@ class JournalRestControllerTest {
         JournalRowsResultDTO journalRowsResultDTO = TestData.getJournalRowsResultDTO();
         doReturn(null).when(journalService).getJournalRows(any(String.class), any(JournalRowsRequestDTO.class));
         doReturn(TestData.getQuestionsItemDtos()).when(journalService).getJournalRows("questions", journalRowsRequestDTO);
-        //TODO case for another format of journal
         JournalRowsRequestDTO emptyJournalRowsRequestDTO = TestData.getJournalRowsRequestDTO(false, false, false);
         //empty request
         mockMvc.perform(MockMvcRequestBuilders
