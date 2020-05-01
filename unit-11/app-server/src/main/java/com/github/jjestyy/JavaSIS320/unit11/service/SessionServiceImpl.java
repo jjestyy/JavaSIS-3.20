@@ -132,13 +132,15 @@ public class SessionServiceImpl implements SessionService {
         //no correct answers
         if(countOfAllCorrectAnswers == 0) {
             return countOfWrongAnswers == 0 ? 1 : 0;
-        }
-        //all answers are correct
-        if(countOfAllCorrectAnswers == countOfAllAnswers) {
-            return countOfCorrectAnswers / countOfAllCorrectAnswers;
-        }
-        //default
-        return Math.max(0, countOfCorrectAnswers / countOfAllCorrectAnswers -
+        } else {
+            //all answers are correct
+            if (countOfAllCorrectAnswers == countOfAllAnswers) {
+                return countOfCorrectAnswers / countOfAllCorrectAnswers;
+            } else {
+                //default
+                return Math.max(0, countOfCorrectAnswers / countOfAllCorrectAnswers -
                         countOfWrongAnswers / (countOfAllAnswers - countOfAllCorrectAnswers));
+            }
+        }
     }
 }
