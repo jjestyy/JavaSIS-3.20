@@ -58,15 +58,18 @@ public class SessionServiceImpl implements SessionService {
     public double addSession(SessionDTO dto) {
         List<AnsweredQuestionDTO> questionsList = dto.getQuestionsList();
         double points = 0;
+        double percent = 100;
         List<SessionQuestionAnswerDTO> answersToSave = new ArrayList<>();
-        for(AnsweredQuestionDTO questionDTO: questionsList) {
-            points += getPoints(questionDTO);
-            questionDTO.getAnswersList()
-                    .stream()
-                    .filter(SessionQuestionAnswerDTO::getIsSelected)
-                    .forEach(answersToSave::add);
+        if(questionsList.size() > 0 ) {
+            for (AnsweredQuestionDTO questionDTO : questionsList) {
+                points += getPoints(questionDTO);
+                questionDTO.getAnswersList()
+                        .stream()
+                        .filter(SessionQuestionAnswerDTO::getIsSelected)
+                        .forEach(answersToSave::add);
+            }
+            percent = points / questionsList.size() * 100;
         }
-        double percent = points / questionsList.size() * 100;
         Session session = createSession(dto, percent);
         answersToSave.forEach(sessionQuestionAnswerDTO -> createAnswer(sessionQuestionAnswerDTO, session));
         return percent;
