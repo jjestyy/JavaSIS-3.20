@@ -12,13 +12,13 @@ import java.time.LocalDate;
 @Data
 public class Session extends BaseEntity <Long> {
 
-    @Column
+    @Column(name = "fio")
     private String fio;
 
-    @Column
+    @Column(name = "points")
     private Double points;
 
-    @Column
+    @Column(name = "insert_date")
     private LocalDate insertDate;
 
 }

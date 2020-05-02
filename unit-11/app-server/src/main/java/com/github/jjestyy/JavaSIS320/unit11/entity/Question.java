@@ -10,7 +10,7 @@ import javax.persistence.Entity;
 @Entity
 @Data
 public class Question extends BaseEntity <Long> {
-    @Column
+    @Column(name = "name")
     private String name;
 
     @Override

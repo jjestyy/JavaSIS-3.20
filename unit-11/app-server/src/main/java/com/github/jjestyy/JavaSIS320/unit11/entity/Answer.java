@@ -9,10 +9,10 @@ import javax.persistence.*;
 @Entity
 @Data
 public class Answer extends BaseEntity <Long> {
-    @Column
+    @Column(name = "name")
     String name;
 
-    @Column
+    @Column(name = "is_correct")
     Boolean isCorrect;
 
     @JoinColumn(name = "question_id")

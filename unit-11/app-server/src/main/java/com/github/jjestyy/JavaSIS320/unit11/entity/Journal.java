@@ -11,9 +11,9 @@ import javax.persistence.Id;
 @Entity
 @Data
 public class Journal extends BaseEntity <String>{
-    @Column
+    @Column(name = "name")
     private String name;
 
-    @Column
+    @Column(name = "default_page_size")
     private Long defaultPageSize;
 }
