@@ -1,5 +1,6 @@
 package com.github.jjestyy.JavaSIS320.unit11.service;
 
+import com.github.jjestyy.JavaSIS320.unit11.controller.JournalType;
 import com.github.jjestyy.JavaSIS320.unit11.data.JournalRepository;
 import com.github.jjestyy.JavaSIS320.unit11.dto.JournalItemDto;
 import com.github.jjestyy.JavaSIS320.unit11.dto.JournalRowsRequestDto;
@@ -12,9 +13,6 @@ import java.util.List;
 
 @Service
 public class JournalServiceImpl implements JournalService {
-
-    public static final String QUESTIONS_JOURNAL_ID = "questions";
-    public static final String SESSIONS_JOURNAL_ID = "sessions";
 
     @Autowired
     private JournalRepository journalRepository;
@@ -33,16 +31,16 @@ public class JournalServiceImpl implements JournalService {
 
     @PostConstruct
     private void initData() {
-        if(!journalRepository.existsById(JournalServiceImpl.QUESTIONS_JOURNAL_ID)) {
+        if(!journalRepository.existsById(JournalType.QUESTIONS_JOURNAL_ID)) {
             Journal journal = new Journal();
-            journal.setId(JournalServiceImpl.QUESTIONS_JOURNAL_ID);
+            journal.setId(JournalType.QUESTIONS_JOURNAL_ID);
             journal.setName("Вопросы");
             journal.setDefaultPageSize(15L);
             journalRepository.save(journal);
         }
-        if(!journalRepository.existsById(JournalServiceImpl.SESSIONS_JOURNAL_ID)) {
+        if(!journalRepository.existsById(JournalType.SESSIONS_JOURNAL_ID)) {
             Journal journal = new Journal();
-            journal.setId(JournalServiceImpl.SESSIONS_JOURNAL_ID);
+            journal.setId(JournalType.SESSIONS_JOURNAL_ID);
             journal.setName("Сессии");
             journal.setDefaultPageSize(15L);
             journalRepository.save(journal);
@@ -52,9 +50,9 @@ public class JournalServiceImpl implements JournalService {
     @Override
     public List<? extends JournalItemDto> getJournalRows(String id, JournalRowsRequestDto req) {
         switch (id) {
-            case QUESTIONS_JOURNAL_ID:
+            case JournalType.QUESTIONS_JOURNAL_ID:
                 return questionService.getQuestions(req);
-            case SESSIONS_JOURNAL_ID:
+            case JournalType.SESSIONS_JOURNAL_ID:
                 return sessionService.getSessions(req);
             default:
                 throw new RuntimeException();
