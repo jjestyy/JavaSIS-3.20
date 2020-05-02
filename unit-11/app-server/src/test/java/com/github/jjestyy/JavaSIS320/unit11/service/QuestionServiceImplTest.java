@@ -46,7 +46,7 @@ class QuestionServiceImplTest {
         JournalRowsRequestDto req = TestData.getJournalRowsRequestDTO(false,false,false);
         JournalRowsRequestDto req2 = TestData.getJournalRowsRequestDTO(false,false,true);
 
-        PageRequest pageRequest = PageRequest.of(req.getPage()-1, req.getPageSize(), Sort.by(Sort.Direction.ASC, "id"));
+        PageRequest pageRequest = PageRequest.of(Math.max(0, req.getPage()-1), req.getPageSize(), Sort.by(Sort.Direction.ASC, "id"));
         when(questionRepository.findByNameContainingIgnoreCase(req.getSearch(), pageRequest))
             .thenReturn(questionList);
         when(questionRepository.findByNameContainingIgnoreCase(req2.getSearch(), pageRequest))

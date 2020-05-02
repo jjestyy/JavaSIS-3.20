@@ -43,7 +43,7 @@ class QuestionRepositoryTest {
     @ParameterizedTest
     @MethodSource("createRequestsAndResults")
     void findByNameContainingIgnoreCase(JournalRowsRequestDto req, List<Question> expectedResult) {
-        PageRequest pageRequest = PageRequest.of(req.getPage()-1, req.getPageSize(), Sort.by(Sort.Direction.ASC, "id"));
+        PageRequest pageRequest = PageRequest.of(Math.max(0, req.getPage()-1), req.getPageSize(), Sort.by(Sort.Direction.ASC, "id"));
         List<Question> actualResult = questionRepository.findByNameContainingIgnoreCase(req.getSearch(), pageRequest);
         for (int i = 0; i< expectedResult.size(); i++ ) {
             assertEquals(expectedResult.get(i).getName(), actualResult.get(i).getName());

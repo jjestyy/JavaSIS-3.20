@@ -17,7 +17,7 @@ import java.util.List;
 public class JournalRestController {
 
     @Autowired
-    JournalService journalService;
+    private JournalService journalService;
 
     @GetMapping("{id}")
     public JournalEntityDto getJournalEntity(@PathVariable String id){

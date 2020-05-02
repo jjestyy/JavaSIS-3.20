@@ -80,7 +80,7 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public List<SessionsItemDto> getSessions(JournalRowsRequestDto req) {
-        PageRequest pageRequest = PageRequest.of(req.getPage()-1, req.getPageSize(), Sort.by(Sort.Direction.ASC, "id"));
+        PageRequest pageRequest = PageRequest.of(Math.max(0, req.getPage()-1), req.getPageSize(), Sort.by(Sort.Direction.ASC, "id"));
         return sessionRepository.findByFioContainingIgnoreCase(req.getSearch(), pageRequest)
                 .stream()
                 .map(SessionsItemDto::new)

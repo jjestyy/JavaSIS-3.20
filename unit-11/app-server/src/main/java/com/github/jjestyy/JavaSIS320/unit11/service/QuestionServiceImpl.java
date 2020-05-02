@@ -29,7 +29,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public List<QuestionsItemDto> getQuestions(JournalRowsRequestDto req) {
-        PageRequest pageRequest = PageRequest.of(req.getPage()-1, req.getPageSize(), Sort.by(Sort.Direction.ASC, "id"));
+        PageRequest pageRequest = PageRequest.of(Math.max(0, req.getPage()-1), req.getPageSize(), Sort.by(Sort.Direction.ASC, "id"));
         return questionRepository.findByNameContainingIgnoreCase(req.getSearch(), pageRequest)
             .stream()
             .map(question -> new QuestionsItemDto(question, answerRepository.findByQuestion(question)))
@@ -59,10 +59,14 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public QuestionsItemDto editQuestion(QuestionsItemDto dto) {
-        Question question = questionRepository.findById(Long.parseLong(dto.getId()))
-                .orElseThrow(() -> new RuntimeException("Cannot find question with such id - " + dto.getId()));
+        Question question = getQuestionByDto(dto);
         answerRepository.findByQuestion(question).forEach(answer -> answerRepository.delete(answer));
         return saveQuestionData(dto, question);
+    }
+
+    private Question getQuestionByDto(QuestionsItemDto dto) {
+        return questionRepository.findById(Long.parseLong(dto.getId()))
+                .orElseThrow(() -> new RuntimeException("Cannot find question with such id - " + dto.getId()));
     }
 
     private boolean checkFilter(QuestionsItemDto QuestionsItemDto, List<FilterDto> filters) {
