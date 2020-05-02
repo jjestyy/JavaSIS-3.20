@@ -8,7 +8,7 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-public class Answer extends EntityWithLongId {
+public class Answer extends BaseEntity <Long> {
     @Column
     String name;
 

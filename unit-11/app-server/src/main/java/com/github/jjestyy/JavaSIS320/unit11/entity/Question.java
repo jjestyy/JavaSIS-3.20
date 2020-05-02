@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-public class Question extends EntityWithLongId{
+public class Question extends BaseEntity <Long> {
     @Column
     private String name;
 

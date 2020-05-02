@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-public class Session extends EntityWithLongId {
+public class Session extends BaseEntity <Long> {
 
     @Column
     private String fio;

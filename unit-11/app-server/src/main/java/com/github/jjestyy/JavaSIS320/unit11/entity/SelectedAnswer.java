@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-public class SelectedAnswer extends EntityWithLongId {
+public class SelectedAnswer extends BaseEntity <Long> {
     @JoinColumn(name = "answer_id")
     @ManyToOne(fetch = FetchType.LAZY)
     Answer answer;

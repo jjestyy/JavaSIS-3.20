@@ -9,10 +9,10 @@ import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 @Data
-public class EntityWithLongId {
+public class BaseEntity <T> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private T id;
 
 }
