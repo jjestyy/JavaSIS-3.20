@@ -8,6 +8,7 @@ import com.github.jjestyy.JavaSIS320.unit11.dto.JournalRowsRequestDto;
 import com.github.jjestyy.JavaSIS320.unit11.dto.QuestionsItemDto;
 import com.github.jjestyy.JavaSIS320.unit11.entity.Answer;
 import com.github.jjestyy.JavaSIS320.unit11.entity.Question;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -26,6 +27,14 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Autowired
     private AnswerRepository answerRepository;
+
+    private enum FilterName{
+        ANSWER_COUNT("question-answer-count");
+        public String id;
+        FilterName(String id) {
+            this.id = id;
+        }
+    }
 
     @Override
     public List<QuestionsItemDto> getQuestions(JournalRowsRequestDto req) {
@@ -71,7 +80,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     private boolean checkFilter(QuestionsItemDto QuestionsItemDto, List<FilterDto> filters) {
         for(FilterDto filter: filters) {
-            if(filter.getCode().equals("question-answer-count") &&
+            if(filter.getCode().equals(FilterName.ANSWER_COUNT.toString()) &&
                     QuestionsItemDto.getAnswers().size() != Integer.parseInt(filter.getValue())) {
                 return false;
             }
