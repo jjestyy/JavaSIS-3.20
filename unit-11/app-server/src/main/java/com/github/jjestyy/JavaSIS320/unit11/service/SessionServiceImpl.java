@@ -8,6 +8,8 @@ import com.github.jjestyy.JavaSIS320.unit11.dto.*;
 import com.github.jjestyy.JavaSIS320.unit11.entity.Answer;
 import com.github.jjestyy.JavaSIS320.unit11.entity.SelectedAnswer;
 import com.github.jjestyy.JavaSIS320.unit11.entity.Session;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -33,6 +35,9 @@ public class SessionServiceImpl implements SessionService {
 
     @Autowired
     private SelectedAnswerRepository selectedAnswerRepository;
+
+    @Autowired
+    private CalculationService calculationService;
 
     @Override
     public List<QuestionsItemDTO> getRandomQuestionsList(int size) {
@@ -62,7 +67,7 @@ public class SessionServiceImpl implements SessionService {
         List<SessionQuestionAnswerDTO> answersToSave = new ArrayList<>();
         if(questionsList.size() > 0 ) {
             for (AnsweredQuestionDTO questionDTO : questionsList) {
-                points += getPoints(questionDTO);
+                points += calculationService.getPoints(questionDTO);
                 questionDTO.getAnswersList()
                         .stream()
                         .filter(SessionQuestionAnswerDTO::getIsSelected)
@@ -105,42 +110,5 @@ public class SessionServiceImpl implements SessionService {
                 .orElseThrow(() -> new RuntimeException(String.format("there is no answer with such id - %s", dto.getId())));
     }
 
-    private double getPoints(AnsweredQuestionDTO question) {
-        List<SessionQuestionAnswerDTO> sessionAnswers = question.getAnswersList();
-        int countOfCorrectAnswers = 0;
-        int countOfWrongAnswers = 0;
-        int countOfAllCorrectAnswers = 0;
-        for (SessionQuestionAnswerDTO answerDTO: sessionAnswers) {
-            Answer answer = getAnswerByDTO(answerDTO);
-            if(answer.getIsCorrect() && answerDTO.getIsSelected()) {
-                countOfAllCorrectAnswers++;
-                countOfCorrectAnswers++;
-            }
-            if(answer.getIsCorrect() && !answerDTO.getIsSelected()) {
-                countOfAllCorrectAnswers++;
-                countOfWrongAnswers++;
-            }
-            if(answerDTO.getIsSelected() && !answer.getIsCorrect()) {
-                countOfWrongAnswers++;
-            }
-        }
-        return calculatePointResult(countOfCorrectAnswers, countOfWrongAnswers, countOfAllCorrectAnswers, sessionAnswers.size());
-    }
 
-    private double calculatePointResult(double countOfCorrectAnswers, int countOfWrongAnswers,
-                                        double countOfAllCorrectAnswers, int countOfAllAnswers) {
-        //no correct answers
-        if(countOfAllCorrectAnswers == 0) {
-            return countOfWrongAnswers == 0 ? 1 : 0;
-        } else {
-            //all answers are correct
-            if (countOfAllCorrectAnswers == countOfAllAnswers) {
-                return countOfCorrectAnswers / countOfAllCorrectAnswers;
-            } else {
-                //default
-                return Math.max(0, countOfCorrectAnswers / countOfAllCorrectAnswers -
-                        countOfWrongAnswers / (countOfAllAnswers - countOfAllCorrectAnswers));
-            }
-        }
-    }
 }

@@ -14,6 +14,10 @@ public class Unit11TestConfiguration {
         return new SessionServiceImpl();
     }
     @Bean
+    public CalculationService calculationService() {
+        return new CalculationServiceImpl();
+    }
+    @Bean
     public QuestionService questionService() {
         return new QuestionServiceImpl();
     }
