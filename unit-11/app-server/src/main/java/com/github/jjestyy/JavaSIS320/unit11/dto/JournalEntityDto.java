@@ -4,13 +4,13 @@ import com.github.jjestyy.JavaSIS320.unit11.entity.Journal;
 import lombok.Data;
 
 @Data
-public class JournalEntityDTO {
+public class JournalEntityDto {
 
     private String id;
     private String name;
     private Long defaultPageSize;
 
-    public JournalEntityDTO(Journal journal) {
+    public JournalEntityDto(Journal journal) {
         id = journal.getId();
         name = journal.getName();
         defaultPageSize = journal.getDefaultPageSize();

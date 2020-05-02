@@ -7,12 +7,12 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
-public class AnswerItemDTO {
+public class AnswerItemDto {
     private String id;
     private String answerText;
     private Boolean isCorrect;
 
-    public AnswerItemDTO(Answer answer) {
+    public AnswerItemDto(Answer answer) {
         this.id = answer.getId().toString();
         this.answerText = answer.getName();
         this.isCorrect = answer.getIsCorrect();

@@ -2,8 +2,6 @@ package com.github.jjestyy.JavaSIS320.unit11.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.jjestyy.JavaSIS320.unit11.TestData;
-import com.github.jjestyy.JavaSIS320.unit11.dto.QuestionsItemDTO;
-import com.github.jjestyy.JavaSIS320.unit11.service.QuestionService;
 import com.github.jjestyy.JavaSIS320.unit11.service.SessionService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +13,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

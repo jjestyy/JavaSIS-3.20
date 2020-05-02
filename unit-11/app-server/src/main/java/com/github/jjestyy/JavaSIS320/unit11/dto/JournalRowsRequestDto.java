@@ -5,9 +5,9 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class JournalRowsRequestDTO {
+public class JournalRowsRequestDto {
     private String search;
     private int page;
     private int pageSize;
-    List<FilterDTO> filters;
+    private List<FilterDto> filters;
 }

@@ -4,18 +4,14 @@ import com.github.jjestyy.JavaSIS320.unit11.TestData;
 import com.github.jjestyy.JavaSIS320.unit11.Unit11TestConfiguration;
 import com.github.jjestyy.JavaSIS320.unit11.data.AnswerRepository;
 import com.github.jjestyy.JavaSIS320.unit11.data.QuestionRepository;
-import com.github.jjestyy.JavaSIS320.unit11.dto.QuestionsItemDTO;
-import com.github.jjestyy.JavaSIS320.unit11.entity.Answer;
+import com.github.jjestyy.JavaSIS320.unit11.dto.QuestionsItemDto;
 import com.github.jjestyy.JavaSIS320.unit11.entity.Question;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -36,7 +32,7 @@ class QuestionServiceImplIntTest {
     void createQuestion() {
         long countBefore = questionRepository.count();
         long countBeforeAnwers = answerRepository.count();
-        QuestionsItemDTO dto = TestData.getQuestionsItemDtos().get(1);
+        QuestionsItemDto dto = TestData.getQuestionsItemDtos().get(1);
         questionService.createQuestion(dto);
         Long countAfter = questionRepository.count();
         Long countAfterAnwers = answerRepository.count();
@@ -48,7 +44,7 @@ class QuestionServiceImplIntTest {
     void editQuestion() {
         Question question = TestData.getTestQuestionsList().get(1);
         questionRepository.save(question);
-        QuestionsItemDTO dto = TestData.getQuestionsItemDtos().get(1);
+        QuestionsItemDto dto = TestData.getQuestionsItemDtos().get(1);
         dto.setId(question.getId().toString());
         dto.setName("some name");
         Assertions.assertEquals(  questionService.editQuestion(dto).getName(),

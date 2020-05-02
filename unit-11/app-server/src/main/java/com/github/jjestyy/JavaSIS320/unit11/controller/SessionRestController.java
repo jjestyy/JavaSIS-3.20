@@ -1,7 +1,7 @@
 package com.github.jjestyy.JavaSIS320.unit11.controller;
 
-import com.github.jjestyy.JavaSIS320.unit11.dto.QuestionsItemDTO;
-import com.github.jjestyy.JavaSIS320.unit11.dto.SessionDTO;
+import com.github.jjestyy.JavaSIS320.unit11.dto.QuestionsItemDto;
+import com.github.jjestyy.JavaSIS320.unit11.dto.SessionDto;
 import com.github.jjestyy.JavaSIS320.unit11.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,12 +19,12 @@ public class SessionRestController {
     private SessionService sessionService;
 
     @GetMapping("questions-new")
-    public List<QuestionsItemDTO> getQuestionsNew() {
+    public List<QuestionsItemDto> getQuestionsNew() {
         return sessionService.getRandomQuestionsList(DEFAULT_SESSION_SIZE);
     }
 
     @PostMapping()
-    public String postSession(@RequestBody SessionDTO dto) {
+    public String postSession(@RequestBody SessionDto dto) {
         return String.valueOf(sessionService.addSession(dto));
     }
 

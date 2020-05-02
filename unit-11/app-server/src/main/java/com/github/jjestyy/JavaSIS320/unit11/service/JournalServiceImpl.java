@@ -1,15 +1,14 @@
 package com.github.jjestyy.JavaSIS320.unit11.service;
 
 import com.github.jjestyy.JavaSIS320.unit11.data.JournalRepository;
-import com.github.jjestyy.JavaSIS320.unit11.dto.JournalItemDTO;
-import com.github.jjestyy.JavaSIS320.unit11.dto.JournalRowsRequestDTO;
+import com.github.jjestyy.JavaSIS320.unit11.dto.JournalItemDto;
+import com.github.jjestyy.JavaSIS320.unit11.dto.JournalRowsRequestDto;
 import com.github.jjestyy.JavaSIS320.unit11.entity.Journal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.function.Function;
 
 @Service
 public class JournalServiceImpl implements JournalService {
@@ -51,7 +50,7 @@ public class JournalServiceImpl implements JournalService {
     }
 
     @Override
-    public List<? extends JournalItemDTO> getJournalRows(String id, JournalRowsRequestDTO req) {
+    public List<? extends JournalItemDto> getJournalRows(String id, JournalRowsRequestDto req) {
         switch (id) {
             case QUESTIONS_JOURNAL_ID:
                 return questionService.getQuestions(req);

@@ -7,8 +7,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class JournalRowsResultDTO {
+public class JournalRowsResultDto {
     private int total;
-    private List<? extends JournalItemDTO> items;
-
+    private List<? extends JournalItemDto> items;
 }

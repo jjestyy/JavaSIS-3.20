@@ -1,13 +1,12 @@
 package com.github.jjestyy.JavaSIS320.unit11.dto;
 
+import com.github.jjestyy.JavaSIS320.unit11.entity.Answer;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
-
 @Data
 @RequiredArgsConstructor
-public class AnsweredQuestionDTO {
+public class SessionQuestionAnswerDto {
     private String id;
-    private List<SessionQuestionAnswerDTO> answersList;
+    private Boolean isSelected;
 }

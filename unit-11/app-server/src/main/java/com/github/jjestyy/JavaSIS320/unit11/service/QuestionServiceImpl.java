@@ -2,10 +2,10 @@ package com.github.jjestyy.JavaSIS320.unit11.service;
 
 import com.github.jjestyy.JavaSIS320.unit11.data.AnswerRepository;
 import com.github.jjestyy.JavaSIS320.unit11.data.QuestionRepository;
-import com.github.jjestyy.JavaSIS320.unit11.dto.AnswerItemDTO;
-import com.github.jjestyy.JavaSIS320.unit11.dto.FilterDTO;
-import com.github.jjestyy.JavaSIS320.unit11.dto.JournalRowsRequestDTO;
-import com.github.jjestyy.JavaSIS320.unit11.dto.QuestionsItemDTO;
+import com.github.jjestyy.JavaSIS320.unit11.dto.AnswerItemDto;
+import com.github.jjestyy.JavaSIS320.unit11.dto.FilterDto;
+import com.github.jjestyy.JavaSIS320.unit11.dto.JournalRowsRequestDto;
+import com.github.jjestyy.JavaSIS320.unit11.dto.QuestionsItemDto;
 import com.github.jjestyy.JavaSIS320.unit11.entity.Answer;
 import com.github.jjestyy.JavaSIS320.unit11.entity.Question;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,25 +28,25 @@ public class QuestionServiceImpl implements QuestionService {
     private AnswerRepository answerRepository;
 
     @Override
-    public List<QuestionsItemDTO> getQuestions(JournalRowsRequestDTO req) {
+    public List<QuestionsItemDto> getQuestions(JournalRowsRequestDto req) {
         PageRequest pageRequest = PageRequest.of(req.getPage()-1, req.getPageSize(), Sort.by(Sort.Direction.ASC, "id"));
         return questionRepository.findByNameContainingIgnoreCase(req.getSearch(), pageRequest)
             .stream()
-            .map(question -> new QuestionsItemDTO(question, answerRepository.findByQuestion(question)))
+            .map(question -> new QuestionsItemDto(question, answerRepository.findByQuestion(question)))
             .filter(questionsItemDto -> checkFilter(questionsItemDto, req.getFilters()))
             .collect(Collectors.toList());
     }
 
     @Override
-    public QuestionsItemDTO createQuestion(QuestionsItemDTO dto) {
+    public QuestionsItemDto createQuestion(QuestionsItemDto dto) {
         return saveQuestionData(dto, new Question());
     }
 
-    private QuestionsItemDTO saveQuestionData(QuestionsItemDTO dto, Question question) {
+    private QuestionsItemDto saveQuestionData(QuestionsItemDto dto, Question question) {
         question.setName(dto.getName());
         questionRepository.save(question);
 
-        for (AnswerItemDTO answerDTO : dto.getAnswers()) {
+        for (AnswerItemDto answerDTO : dto.getAnswers()) {
             Answer answer = new Answer();
             answer.setName(answerDTO.getAnswerText());
             answer.setIsCorrect(answerDTO.getIsCorrect());
@@ -54,19 +54,19 @@ public class QuestionServiceImpl implements QuestionService {
 
             answerRepository.save(answer);
         }
-        return new QuestionsItemDTO(question, answerRepository.findByQuestion(question));
+        return new QuestionsItemDto(question, answerRepository.findByQuestion(question));
     }
 
     @Override
-    public QuestionsItemDTO editQuestion(QuestionsItemDTO dto) {
+    public QuestionsItemDto editQuestion(QuestionsItemDto dto) {
         Question question = questionRepository.findById(Long.parseLong(dto.getId()))
                 .orElseThrow(() -> new RuntimeException("Cannot find question with such id - " + dto.getId()));
         answerRepository.findByQuestion(question).forEach(answer -> answerRepository.delete(answer));
         return saveQuestionData(dto, question);
     }
 
-    private boolean checkFilter(QuestionsItemDTO QuestionsItemDto, List<FilterDTO> filters) {
-        for(FilterDTO filter: filters) {
+    private boolean checkFilter(QuestionsItemDto QuestionsItemDto, List<FilterDto> filters) {
+        for(FilterDto filter: filters) {
             if(filter.getCode().equals("question-answer-count") &&
                     QuestionsItemDto.getAnswers().size() != Integer.parseInt(filter.getValue())) {
                 return false;

@@ -10,12 +10,12 @@ import java.time.LocalDate;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @RequiredArgsConstructor
-public class SessionsItemDTO extends JournalItemDTO {
+public class SessionsItemDto extends JournalItemDto {
     private String name;
     private LocalDate insertDate;
     private Double result;
 
-    public SessionsItemDTO(Session session) {
+    public SessionsItemDto(Session session) {
         this.name = session.getFio();
         this.insertDate = session.getInsertDate();
         this.result = session.getPoints();

@@ -67,8 +67,8 @@ public class TestData {
     }
 
 
-    public static JournalRowsRequestDTO getJournalRowsRequestDTO(Boolean isPage, Boolean isSearch, Boolean isFilter) {
-        JournalRowsRequestDTO journalRowsRequestDTO = new JournalRowsRequestDTO();
+    public static JournalRowsRequestDto getJournalRowsRequestDTO(Boolean isPage, Boolean isSearch, Boolean isFilter) {
+        JournalRowsRequestDto journalRowsRequestDTO = new JournalRowsRequestDto();
         if(isSearch) {
             journalRowsRequestDTO.setSearch("1");
         } else {
@@ -82,7 +82,7 @@ public class TestData {
             journalRowsRequestDTO.setPage(1);
         }
         if(isFilter) {
-            FilterDTO filterDto = new FilterDTO();
+            FilterDto filterDto = new FilterDto();
             filterDto.setCode("question-answer-count");
             filterDto.setType("single-select");
             filterDto.setValue("2");
@@ -93,12 +93,12 @@ public class TestData {
         return journalRowsRequestDTO;
     }
 
-    public static JournalRowsResultDTO getJournalRowsResultDTO() {
-        List<QuestionsItemDTO> questionsItemDtoList = getQuestionsItemDtos();
-        return  new JournalRowsResultDTO(questionsItemDtoList.size(), questionsItemDtoList);
+    public static JournalRowsResultDto getJournalRowsResultDTO() {
+        List<QuestionsItemDto> questionsItemDtoList = getQuestionsItemDtos();
+        return  new JournalRowsResultDto(questionsItemDtoList.size(), questionsItemDtoList);
     }
 
-    public static List<QuestionsItemDTO> getQuestionsItemDtos() {
+    public static List<QuestionsItemDto> getQuestionsItemDtos() {
         List<Question> questions = getTestQuestionsList();
         List<Answer> answers = getTestAnswersList(questions);
         for (int i = 0; i< questions.size(); i++ ) {
@@ -110,21 +110,21 @@ public class TestData {
       return getQuestionsItemDtosFromQuestionsAndAnswers(questions, answers);
     }
 
-    public static List<QuestionsItemDTO> getQuestionsItemDtosFromQuestionsAndAnswers(List<Question> questions, List<Answer> answers) {
+    public static List<QuestionsItemDto> getQuestionsItemDtosFromQuestionsAndAnswers(List<Question> questions, List<Answer> answers) {
         return List.of(
-                new QuestionsItemDTO(questions.get(0), answers.subList(0,3)),
-                new QuestionsItemDTO(questions.get(1), answers.subList(3,5)),
-                new QuestionsItemDTO(questions.get(2), answers.subList(5,8)),
-                new QuestionsItemDTO(questions.get(3), answers.subList(8,9))
+                new QuestionsItemDto(questions.get(0), answers.subList(0,3)),
+                new QuestionsItemDto(questions.get(1), answers.subList(3,5)),
+                new QuestionsItemDto(questions.get(2), answers.subList(5,8)),
+                new QuestionsItemDto(questions.get(3), answers.subList(8,9))
         );
     }
 
-    public static SessionDTO getSessionDTO(String name, List<Question> questions, List<Answer> answers, Boolean isSelected, Boolean isHalf){
-        SessionDTO dto = new SessionDTO();
+    public static SessionDto getSessionDTO(String name, List<Question> questions, List<Answer> answers, Boolean isSelected, Boolean isHalf){
+        SessionDto dto = new SessionDto();
         dto.setName(name);
-        List<SessionQuestionAnswerDTO> answersList = new ArrayList<>();
+        List<SessionQuestionAnswerDto> answersList = new ArrayList<>();
         answers.forEach(answer -> {
-                SessionQuestionAnswerDTO answerDTO = new SessionQuestionAnswerDTO();
+                SessionQuestionAnswerDto answerDTO = new SessionQuestionAnswerDto();
                 answerDTO.setId(String.valueOf(answer.getId()));
                 answerDTO.setIsSelected(isSelected);
                 answersList.add(answerDTO);
@@ -134,9 +134,9 @@ public class TestData {
                 answersList.get(i).setIsSelected(i%2==0 ? isSelected : !isSelected);
             }
         }
-        List<AnsweredQuestionDTO> questionsList = new ArrayList<>();
+        List<AnsweredQuestionDto> questionsList = new ArrayList<>();
         questions.forEach(question -> {
-            AnsweredQuestionDTO qDTO = new AnsweredQuestionDTO();
+            AnsweredQuestionDto qDTO = new AnsweredQuestionDto();
             qDTO.setId(String.valueOf(question.getId()));
             questionsList.add(qDTO);
         });

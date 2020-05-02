@@ -3,20 +3,15 @@ package com.github.jjestyy.JavaSIS320.unit11.service;
 import com.github.jjestyy.JavaSIS320.unit11.TestData;
 import com.github.jjestyy.JavaSIS320.unit11.Unit11TestConfiguration;
 import com.github.jjestyy.JavaSIS320.unit11.data.AnswerRepository;
-import com.github.jjestyy.JavaSIS320.unit11.data.JournalRepository;
 import com.github.jjestyy.JavaSIS320.unit11.data.QuestionRepository;
-import com.github.jjestyy.JavaSIS320.unit11.dto.JournalRowsRequestDTO;
+import com.github.jjestyy.JavaSIS320.unit11.dto.JournalRowsRequestDto;
 import com.github.jjestyy.JavaSIS320.unit11.entity.Answer;
 import com.github.jjestyy.JavaSIS320.unit11.entity.Question;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -48,8 +43,8 @@ class QuestionServiceImplTest {
         for (int i = 0; i< answerList.size(); i++ ) {
             answerList.get(i).setId((long) i+1);
         }
-        JournalRowsRequestDTO req = TestData.getJournalRowsRequestDTO(false,false,false);
-        JournalRowsRequestDTO req2 = TestData.getJournalRowsRequestDTO(false,false,true);
+        JournalRowsRequestDto req = TestData.getJournalRowsRequestDTO(false,false,false);
+        JournalRowsRequestDto req2 = TestData.getJournalRowsRequestDTO(false,false,true);
 
         PageRequest pageRequest = PageRequest.of(req.getPage()-1, req.getPageSize(), Sort.by(Sort.Direction.ASC, "id"));
         when(questionRepository.findByNameContainingIgnoreCase(req.getSearch(), pageRequest))

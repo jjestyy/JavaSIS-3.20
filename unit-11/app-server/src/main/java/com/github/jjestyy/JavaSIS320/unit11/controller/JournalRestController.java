@@ -1,9 +1,9 @@
 package com.github.jjestyy.JavaSIS320.unit11.controller;
 
-import com.github.jjestyy.JavaSIS320.unit11.dto.JournalEntityDTO;
-import com.github.jjestyy.JavaSIS320.unit11.dto.JournalItemDTO;
-import com.github.jjestyy.JavaSIS320.unit11.dto.JournalRowsResultDTO;
-import com.github.jjestyy.JavaSIS320.unit11.dto.JournalRowsRequestDTO;
+import com.github.jjestyy.JavaSIS320.unit11.dto.JournalEntityDto;
+import com.github.jjestyy.JavaSIS320.unit11.dto.JournalItemDto;
+import com.github.jjestyy.JavaSIS320.unit11.dto.JournalRowsResultDto;
+import com.github.jjestyy.JavaSIS320.unit11.dto.JournalRowsRequestDto;
 import com.github.jjestyy.JavaSIS320.unit11.service.JournalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,19 +20,19 @@ public class JournalRestController {
     JournalService journalService;
 
     @GetMapping("{id}")
-    public JournalEntityDTO getJournalEntity(@PathVariable String id){
-        return new JournalEntityDTO(journalService.getJournal(id));
+    public JournalEntityDto getJournalEntity(@PathVariable String id){
+        return new JournalEntityDto(journalService.getJournal(id));
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ExceptionHandler(RuntimeException.class)
-    public JournalEntityDTO handleNotFound(RuntimeException e) {
+    public JournalEntityDto handleNotFound(RuntimeException e) {
         return null;
     }
 
     @PutMapping("{id}/rows")
-    public JournalRowsResultDTO getRows(@PathVariable String id, @RequestBody JournalRowsRequestDTO req) {
-        List<? extends JournalItemDTO> collect = journalService.getJournalRows(id, req);
-        return new JournalRowsResultDTO(collect.size(), collect);
+    public JournalRowsResultDto getRows(@PathVariable String id, @RequestBody JournalRowsRequestDto req) {
+        List<? extends JournalItemDto> collect = journalService.getJournalRows(id, req);
+        return new JournalRowsResultDto(collect.size(), collect);
     }
 }

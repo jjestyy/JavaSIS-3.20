@@ -1,6 +1,6 @@
 package com.github.jjestyy.JavaSIS320.unit11.controller;
 
-import com.github.jjestyy.JavaSIS320.unit11.dto.QuestionsItemDTO;
+import com.github.jjestyy.JavaSIS320.unit11.dto.QuestionsItemDto;
 import com.github.jjestyy.JavaSIS320.unit11.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,12 +14,12 @@ public class QuestionRestController {
     private QuestionService questionService;
 
     @PostMapping("create")
-    public QuestionsItemDTO create(@RequestBody QuestionsItemDTO dto) {
+    public QuestionsItemDto create(@RequestBody QuestionsItemDto dto) {
         return questionService.createQuestion(dto);
     }
 
     @PutMapping("edit")
-    public QuestionsItemDTO edit(@RequestBody QuestionsItemDTO dto) {
+    public QuestionsItemDto edit(@RequestBody QuestionsItemDto dto) {
         return questionService.editQuestion(dto);
     }
 }

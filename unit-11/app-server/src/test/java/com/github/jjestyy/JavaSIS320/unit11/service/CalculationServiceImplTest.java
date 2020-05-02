@@ -1,10 +1,9 @@
 package com.github.jjestyy.JavaSIS320.unit11.service;
 
-import com.github.jjestyy.JavaSIS320.unit11.TestData;
 import com.github.jjestyy.JavaSIS320.unit11.Unit11TestConfiguration;
 import com.github.jjestyy.JavaSIS320.unit11.data.AnswerRepository;
-import com.github.jjestyy.JavaSIS320.unit11.dto.AnsweredQuestionDTO;
-import com.github.jjestyy.JavaSIS320.unit11.dto.SessionQuestionAnswerDTO;
+import com.github.jjestyy.JavaSIS320.unit11.dto.AnsweredQuestionDto;
+import com.github.jjestyy.JavaSIS320.unit11.dto.SessionQuestionAnswerDto;
 import com.github.jjestyy.JavaSIS320.unit11.entity.Answer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +30,7 @@ class CalculationServiceImplTest {
     @Test
     void getPoints() {
         //no answers
-        AnsweredQuestionDTO answeredQuestionDTO = new AnsweredQuestionDTO();
+        AnsweredQuestionDto answeredQuestionDTO = new AnsweredQuestionDto();
         answeredQuestionDTO.setId("1");
 
         assertEquals(1, calculationService.getPoints(answeredQuestionDTO));
@@ -139,8 +138,8 @@ class CalculationServiceImplTest {
 
     }
 
-    private SessionQuestionAnswerDTO getAnswerDto(Answer answer, Boolean isSelected) {
-        SessionQuestionAnswerDTO answerDTO = new SessionQuestionAnswerDTO();
+    private SessionQuestionAnswerDto getAnswerDto(Answer answer, Boolean isSelected) {
+        SessionQuestionAnswerDto answerDTO = new SessionQuestionAnswerDto();
         answerDTO.setId(answer.getId().toString());
         answerDTO.setIsSelected(isSelected);
         return answerDTO;

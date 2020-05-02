@@ -1,12 +1,10 @@
 package com.github.jjestyy.JavaSIS320.unit11.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.jjestyy.JavaSIS320.unit11.TestData;
 import com.github.jjestyy.JavaSIS320.unit11.dto.*;
 import com.github.jjestyy.JavaSIS320.unit11.entity.Journal;
 import com.github.jjestyy.JavaSIS320.unit11.service.JournalService;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,9 +19,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -63,7 +59,7 @@ class JournalRestControllerTest {
         assertEquals(status.value(), result.getResponse().getStatus());
         if(status == HttpStatus.OK) {
             assertEquals(result.getResponse().getContentAsString(),
-                    mapper.writeValueAsString(new JournalEntityDTO(journal)));
+                    mapper.writeValueAsString(new JournalEntityDto(journal)));
         }
         if(status != HttpStatus.NOT_FOUND) {
             verify(journalService).getJournal(any(String.class));
@@ -79,17 +75,17 @@ class JournalRestControllerTest {
 
     @Test
     void getRows() throws Exception {
-        JournalRowsRequestDTO journalRowsRequestDTO = TestData.getJournalRowsRequestDTO(true, true, true);
-        JournalRowsResultDTO journalRowsResultDTO = TestData.getJournalRowsResultDTO();
-        doReturn(null).when(journalService).getJournalRows(any(String.class), any(JournalRowsRequestDTO.class));
+        JournalRowsRequestDto journalRowsRequestDTO = TestData.getJournalRowsRequestDTO(true, true, true);
+        JournalRowsResultDto journalRowsResultDTO = TestData.getJournalRowsResultDTO();
+        doReturn(null).when(journalService).getJournalRows(any(String.class), any(JournalRowsRequestDto.class));
         doReturn(TestData.getQuestionsItemDtos()).when(journalService).getJournalRows("questions", journalRowsRequestDTO);
-        JournalRowsRequestDTO emptyJournalRowsRequestDTO = TestData.getJournalRowsRequestDTO(false, false, false);
+        JournalRowsRequestDto emptyJournalRowsRequestDto = TestData.getJournalRowsRequestDTO(false, false, false);
         //empty request
         mockMvc.perform(MockMvcRequestBuilders
                 .put("/api/journal/questions/rows")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(emptyJournalRowsRequestDTO)))
+                .content(mapper.writeValueAsString(emptyJournalRowsRequestDto)))
                 .andExpect(status().isNoContent())
                 .andExpect(content().string(""));
         //normal request
